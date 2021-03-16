@@ -5,17 +5,17 @@
     </span>
     <div class="content">
       <p style="margin: 1px;">
-        {{ props.title }}
-        <code v-if="props.id">{{ props.id }}</code>
+        <slot></slot>
       </p>
-      <slot></slot>
     </div>
+    <div class="space">&nbsp;</div>
+    <code v-if="props.id">{{ props.id }}</code>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
-const props = defineProps(['title', 'type', 'id'])
+const props = defineProps(['type', 'id'])
 const icon = computed(() => ({
   user: 'mdi-account',
   group: 'mdi-account-group',
@@ -25,14 +25,19 @@ const icon = computed(() => ({
 
 <style scoped>
 div.item {
+  width: 100%;
   display: flex;
+  align-items: center;
   cursor: pointer;
 }
 div.content {
   margin: 0 10px;
 }
+div.space {
+  flex-grow: 1;
+}
 code {
-  margin-left: 5px;
+  margin: 4px;
   cursor: auto;
 }
 </style>
