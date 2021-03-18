@@ -1,4 +1,4 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, watchEffect } from 'vue'
 
 export const SS = window.sessionStorage
 export const LS = window.localStorage
@@ -21,9 +21,9 @@ export const groups = computed(() => {
   if (!SS.group) return {}
   const res = { [SS.group]: 1 }
   for (const g in userdata.value) {
-    const gr = userdata.value[g]
-    for (let i = SS.group.length; i < gr.length; i++) {
-      if (gr[i] == '/') res[group.substr(0, i)] = 1
+    if (!Object.keys(userdata.value[g]).length) continue
+    for (let i = SS.group.length; i < g.length; i++) {
+      if (g[i] == '/') res[g.substr(0, i + 1)] = 1
     }
   }
   return res
@@ -33,16 +33,16 @@ export const groups = computed(() => {
 userdata.value = LS.userdata ? JSON.parse(LS.userdata) : {}
 affairs.value = LS.affairs ? JSON.parse(LS.affairs) : {}
 
-// sync userdata and affairs across windows
-const userdataString = computed(() => JSON.stringify(userdata.value))
-const affairsString = computed(() => JSON.stringify(affairs.value))
-watch(userdataString, s => {
-  if (LS.userdata == s) return 
+// sync among windows and tabs
+watchEffect(() => {
+  const s = JSON.stringify(userdata.value)
+  if (LS.userdata == s) return
   else LS.userdata = s
   console.log('userdata updated')
 })
-watch(affairsString, s => {
-  if (LS.affairs == s) return 
+watchEffect(() => {
+  const s = JSON.stringify(affairs.value)
+  if (LS.affairs == s) return
   else LS.affairs = s
   console.log('affairs updated')
 })
