@@ -29,16 +29,19 @@ export const groups = computed(() => {
   return res
 })
 
+// initialize from cache
+userdata.value = LS.userdata ? JSON.parse(LS.userdata) : {}
+affairs.value = LS.affairs ? JSON.parse(LS.affairs) : {}
 
-watch(userdata, v => {
-  const s = JSON.stringify(v)
+// sync userdata and affairs across windows
+const userdataString = computed(() => JSON.stringify(userdata.value))
+const affairsString = computed(() => JSON.stringify(affairs.value))
+watch(userdataString, s => {
   if (LS.userdata == s) return 
   else LS.userdata = s
   console.log('userdata updated')
 })
-
-watch(affairs, v => {
-  const s = JSON.stringify(v)
+watch(affairsString, s => {
   if (LS.affairs == s) return 
   else LS.affairs = s
   console.log('affairs updated')
