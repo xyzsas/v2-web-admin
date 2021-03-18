@@ -1,5 +1,5 @@
 <template>
-  <div class="item">
+  <div class="item" @click="go">
     <span class="icon">
       <i class="mdi mdi-24px" :class="icon"></i>
     </span>
@@ -9,18 +9,24 @@
       </p>
     </div>
     <div class="space">&nbsp;</div>
-    <code v-if="props.id">{{ props.id }}</code>
+    <code v-if="props.type != 'group'">{{ props.id }}</code>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
+
 const props = defineProps(['type', 'id'])
 const icon = computed(() => ({
   user: 'mdi-account',
   group: 'mdi-account-group',
   affair: 'mdi-package-variant-closed'
 }[props.type]))
+
+const go = () => {
+  const r = `/${props.type}/${encodeURIComponent(props.id)}`
+  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=10000')
+}
 </script>
 
 <style scoped>

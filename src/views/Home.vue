@@ -66,7 +66,7 @@ const searchResult = computed(() => {
   const res = []
   if (!query) return res
   for (const g in groups) {
-    if (!g.indexOf(query)) res.push({ type: 'group', group: g })
+    if (!g.indexOf(query)) res.push({ type: 'group', group: g, id: g })
   }
   for (const u in users) {
     if (!u.indexOf(query) || u == md5(query.toUpperCase()) || users[u][0].indexOf(query) >= 0) res.push({ type: 'user', id: u, title: users[u][0], group: users[u][1] })
@@ -107,6 +107,7 @@ async function init () {
     affairs = data
     loading = ''
   } catch (e) {
+    console.log(e)
     loading = e.response ? e.response.data : '网络错误'
     Swal.fire('错误', loading, 'error')
   }
