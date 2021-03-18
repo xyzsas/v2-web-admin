@@ -33,7 +33,7 @@ ref: user = null
 ref: username = ''
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(users, v => {
-  if (id.value && !v[id.value]) setTimeout(window.close, 2000)
+  if (route.params != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
 })
 
 const title = computed(() => route.params.id == 'NEW'
