@@ -9,12 +9,16 @@
       </p>
     </div>
     <div class="space">&nbsp;</div>
-    <code v-if="props.type != 'group'">{{ props.id }}</code>
+    <button v-if="props.type == 'user' && !set" class="button is-small is-warning" :class="{ 'is-loading': loading }" @click.stop="reset">重置密码</button>
+    <code class="advanced" v-if="props.type != 'group'">{{ props.id }}</code>
   </div>
 </template>
 
 <script setup>
 import { defineProps, computed } from 'vue'
+
+import axios from '../plugins/axios.js'
+const opt = { headers: { token: window.sessionStorage.token } }
 
 const props = defineProps(['type', 'id'])
 const icon = computed(() => ({
@@ -26,6 +30,19 @@ const icon = computed(() => ({
 const go = () => {
   const r = `/${props.type}/${encodeURIComponent(props.id)}`
   window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=10000')
+}
+
+ref: loading = false
+ref: set = false
+async function reset () {
+  loading = true
+  await axios.post('/user', { [props.id]: { password: 1 } }, opt)
+    .then(() => {
+      Swal.fire('重置密码成功', '初始密码为XYZSAS', 'success')
+      set = true
+    })
+    .catch(e => { Swal.fire('错误', e.response ? e.response.data : e, 'error') })
+  loading = false
 }
 </script>
 
@@ -45,5 +62,10 @@ div.space {
 code {
   margin: 4px;
   cursor: auto;
+}
+@media (max-width: 400px) {
+  .advanced {
+    display: none;
+  }
 }
 </style>
