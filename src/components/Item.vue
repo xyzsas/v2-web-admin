@@ -29,7 +29,8 @@ const icon = computed(() => ({
 
 const go = () => {
   const r = `/${props.type}/${encodeURIComponent(props.id)}`
-  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=10000')
+  const left = window.screenLeft > 400 ? window.screenLeft - 380 : 10000
+  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=' + left)
 }
 
 ref: loading = false

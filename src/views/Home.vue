@@ -27,7 +27,7 @@
         {{ loading || '用户管理' }}
       </p>
       <div class="panel-block buttons" style="margin: 0;">
-        <button class="button is-primary">用户组</button>
+        <button class="button is-primary" @click="go('/group/' + encodeURIComponent(state.SS.group))">用户组</button>
         <button class="button" @click="go('/user/NEW')">添加用户</button>
         <button class="button">...</button>
       </div>
