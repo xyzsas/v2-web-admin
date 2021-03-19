@@ -72,7 +72,7 @@ ref: removeLoading = {}
 const remove = async g => {
   const res = await Swal.fire({
     title: '危险操作',
-    html: `删除用户组<code>${g}</code>?`,
+    html: `删除用户组<code>${g}</code>?<br>子用户组和用户都会被删除`,
     icon: 'warning',
     focusCancel: true,
     confirmButtonText: '确定',
