@@ -16,6 +16,10 @@ const routes = [
   {
     path: '/affair/:id',
     component: () => import('./views/Affair.vue')
+  },
+  {
+    path: '/batch',
+    component: () => import('./views/Batch.vue')
   }
 ]
 
