@@ -29,6 +29,7 @@
       <div class="panel-block buttons" style="margin: 0;">
         <button class="button is-primary" @click="go('/group/' + encodeURIComponent(state.SS.group))">用户组</button>
         <button class="button" @click="go('/user/NEW')">添加用户</button>
+        <button class="button" @click="go('/batch')">批量添加用户</button>
         <button class="button">...</button>
       </div>
       <div class="panel-block">备注：用户默认密码为<code>XYZSAS</code></div>
