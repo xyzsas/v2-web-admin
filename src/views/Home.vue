@@ -29,7 +29,7 @@
       <div class="panel-block buttons" style="margin: 0;">
         <button class="button is-primary" @click="go('/group/' + encodeURIComponent(state.SS.group))">用户组</button>
         <button class="button" @click="go('/user/NEW')">添加用户</button>
-        <button class="button" @click="go('/batch')">批量添加用户</button>
+        <button class="button" @click="go('/batch', 700)">批量操作</button>
         <button class="button">...</button>
       </div>
       <div class="panel-block">备注：用户默认密码为<code>XYZSAS</code></div>
@@ -72,8 +72,8 @@ const searchResult = computed(() => {
   return res
 })
 
-const go = r => {
-  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=10000')
+const go = (r, w = 360) => {
+  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=' + w)
 }
 
 ref: loading = ''

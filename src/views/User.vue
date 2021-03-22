@@ -56,7 +56,7 @@ function getUser () {
 }
 
 if (route.params.id != 'NEW') getUser()
-else user = { password: 1 }
+else user = {}
 
 ref: loading = false
 async function submit () {
