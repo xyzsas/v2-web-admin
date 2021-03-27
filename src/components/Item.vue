@@ -10,7 +10,7 @@
     </div>
     <div class="space">&nbsp;</div>
     <button v-if="props.type == 'user' && !set" class="button is-small is-warning" :class="{ 'is-loading': loading }" @click.stop="reset">重置密码</button>
-    <code class="advanced" v-if="props.type != 'group'">{{ props.id }}</code>
+    <code class="advanced" v-if="props.type == 'user' || props.type == 'affair'">{{ props.id }}</code>
   </div>
 </template>
 
@@ -30,8 +30,9 @@ const icon = computed(() => ({
 
 const go = () => {
   const r = `/${props.type}/${encodeURIComponent(props.id)}`
-  const left = window.screenLeft > 400 ? window.screenLeft - 380 : 10000
-  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=360,height=600,top=10000,left=' + left)
+  const w = props.type == 'affair' ? 1000 : 360
+  const left = window.screenLeft > w + 40 ? window.screenLeft - w - 20 : 10000
+  window.open('./#' + r, r, `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${w},height=600,top=10000,left=${left}`)
 }
 
 ref: loading = false
