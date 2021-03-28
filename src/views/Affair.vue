@@ -1,17 +1,27 @@
 <template>
-  <div class="is-flex" style="min-width: 900px; padding-top: 60px;">
-    <div style="position: absolute; top: 10px; left: 15px;">
-      <h1 class="title is-4 mb-1">事务 - {{ title }}</h1>
-      <code>{{ id }}</code>
-    </div>
-    <div style="width: 300px;" class="p-4">
-      <div class="buttons" v-if="affair">
-        <button class="button is-small is-primary" :class="{ 'is-loading': loading }" @click="submit">提交事务信息</button>
-        <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除事务</button>
+  <div class="tile is-ancestor affair">
+    <div class="tile is-parent is-vertical is-7">
+      <div class="tile is-child">
+        <h1 class="title is-4 mb-1">事务 - {{ title }}</h1>
+        <code>{{ id }}</code>
+        <div class="buttons mt-3" v-if="affair">
+          <button class="button is-small is-primary" :class="{ 'is-loading': loading }" @click="submit">提交事务信息</button>
+          <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除事务</button>
+          <button class="button is-small is-info is-light" @click="code">
+            <span class="icon is-small">
+              <i class="mdi mdi-18px mdi-code-tags"></i>
+            </span>
+            <span>高级编辑</span>
+          </button>
+        </div>
       </div>
-      <affair-info v-if="affair" v-model="affair" :data="data"></affair-info>
+      <div class="tile is-child">
+        <affair-info v-if="affair" v-model="affair" :data="data"></affair-info>
+      </div>
     </div>
-    <affair-content style="flex-grow: 1;"  v-if="affair" v-model="affair"></affair-content>
+    <div class="tile is-parent is-vertical is-5">
+      <affair-preview v-if="affair" :affair="affair"></affair-preview>
+    </div>
   </div>
 </template>
 
@@ -23,7 +33,7 @@ import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 import AffairInfo from '../components/AffairInfo.vue'
-import AffairContent from '../components/AffairContent.vue'
+import AffairPreview from '../components/AffairPreview.vue'
 
 ref: affair = null
 ref: data = null
@@ -62,3 +72,11 @@ function getAffair () {
 if (route.params.id != 'NEW') getAffair()
 else affair = {}
 </script>
+
+<style scoped>
+div.affair {
+  background-color: #f3f3f3;
+  min-height: 100vh;
+  margin: 0;
+}
+</style>
