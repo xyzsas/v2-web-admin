@@ -34,22 +34,20 @@
       </div>
       <div class="tile is-child box">
         <h2 class="title is-5">事务变量</h2>
-        <p>Under development</p>
+        <textarea rows="10" class="yml" v-model="a.variables"></textarea>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmit } from 'vue'
+import { computed, defineProps } from 'vue'
 import { groups } from '../plugins/state.js'
 import Item from '../components/Item.vue'
 import AffairPreset from '../components/AffairPreset.vue'
 
-const props = defineProps(['modelValue', 'data'])
-const emit = defineEmit(['update:modelValue'])
-
-const a = props.modelValue
+const props = defineProps(['affair', 'data'])
+const a = props.affair
 
 const displayGroups = computed(() => {
   const res = []

@@ -1,4 +1,62 @@
 <template>
   <h2 class="title is-5">预设模板</h2>
-  <p>Under development</p>
+  <div class="select is-small" :class="{ 'is-loading': loading }">
+    <select v-model="id" style="width: 100vh;" @change="select">
+      <option value="">无预设</option>
+      <option v-for="(v, p) in presets" :value="p">{{ p }}</option>
+    </select>
+  </div>
+  <template v-if="preset">
+    <div class="p-1 mt-2 is-small" style="background-color: #eee; font-size: 0.7rem;">此处显示预设模板的描述信息以及其它指南等</div>
+    <label class="label mt-2">预设参数</label>
+    <textarea rows="10" class="yml" v-model="input"></textarea>
+    <div class="buttons mt-2">
+      <button class="button is-primary mt-2 is-small">应用预设</button>
+    </div>
+  </template>
 </template>
+
+<script setup>
+import { defineProps } from 'vue'
+const props = defineProps(['affair'])
+const a = props.affair
+
+import axios from '../plugins/axios.js'
+import { token } from '../plugins/state.js'
+import { getUrl } from '../plugins/convention.js'
+
+ref: id = a && a.preset || ''
+ref: preset = null
+ref: presets = []
+ref: input = ''
+ref: loading = true
+let template
+
+const catchErr = e => {
+  console.log(e)
+  Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
+  return false
+}
+
+async function init () {
+  const res = await axios.delete('/store', token())
+    .then(({ data }) => data)
+    .catch(catchErr)
+  if (!res) return
+  loading = false
+  template = res.template
+  presets = res.data
+}
+init()
+
+async function select () {
+  if (!id) {
+    preset = null
+    return
+  }
+  loading = true
+  preset = await import(getUrl('preset' + id, presets[id], template))
+  console.log(preset)
+  loading = false
+}
+</script>

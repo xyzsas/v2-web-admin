@@ -16,7 +16,7 @@
         </div>
       </div>
       <div class="tile is-child">
-        <affair-info v-if="affair" v-model="affair" :data="data"></affair-info>
+        <affair-info v-if="affair" :affair="affair" :data="data"></affair-info>
       </div>
     </div>
     <div class="tile is-parent is-vertical is-5">
@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, watchEffect } from 'vue'
+import { computed } from 'vue'
 import { affairs, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
@@ -43,25 +43,27 @@ const title = computed(() => route.params.id == 'NEW'
   ? '创建新事务'
   : affair ? affair.title : '正在载入...'
 )
-watchEffect(() => {
-  if (!affair) return
-  if (!affair.start) delete affair.start
-  if (!affair.end) delete affair.end
-  if (!affair.duration) delete affair.duration
-  if (!affair.anonymous) delete affair.anonymous
-})
 
 const catchErr = async e => {
   console.log(e)
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
-  window.close()
+  if (!affair) window.close()
 }
 
 function getAffair () {
+  affair = null
   axios.get('/affair?affair=' + id.value, token())
     .then(({ data }) => {
       affair = data
       affair.groups = affair.groups.split(',')
+      const vars = {}
+      for (const k in affair) {
+        if (k.indexOf('V:') === 0) {
+          vars[k.replace(/^V:/, '')] = affair[k]
+          delete affair[k]
+        }
+      }
+      affair.variables = Object.keys(vars).length ? jsyaml.dump(vars) : ''
     })
     .catch(catchErr)
   axios.get('/data?affair=' + id.value, token())
@@ -71,6 +73,28 @@ function getAffair () {
 
 if (route.params.id != 'NEW') getAffair()
 else affair = {}
+
+async function submit () {
+  const a = {
+    id: id.value,
+    title: affair.title,
+    groups: affair.groups.join(','),
+    content: affair.content,
+    refs: affair.refs
+  }
+  if (affair.start) a.start = affair.start
+  if (affair.end) a.end = affair.end
+  if (affair.duration) a.duration = affair.duration
+  if (affair.anonymous) a.anonymous = affair.anonymous
+  const vars = jsyaml.load(affair.variables)
+  for (const k in vars) a['V:' + k] = vars[k]
+  loading = true
+  await axios.post('/affair', a, token())
+    .then(() => { Swal.fire('成功', '', 'success') })
+    .catch(catchErr)
+  loading = false
+}
+
 </script>
 
 <style scoped>
