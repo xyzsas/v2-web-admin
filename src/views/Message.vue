@@ -85,7 +85,6 @@ async function submit () {
   body.id = Date.now()
   body.msg = title + '$$' + subtitle + '$$' + link
   body.duration = second
-  console.log(body.users)
   await axios.post('/msg', body, token())
     .then(() => { 
       Swal.fire('成功', '', 'success')
