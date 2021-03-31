@@ -96,7 +96,7 @@ function msg () {
     : affair.start
       ? Math.min(ms2s(affair.start - Date.now()) + 86400, 604800)
       : 604800
-  window.open(`./#/msg?id=${affair.id}&title=${affair.title}&link=${encodeURIComponent('/#/@/' + affair.id)}&duration=${duration}&groups=${affair.groups}`, '/msg', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=360')
+  window.open(`./#/msg?id=${affair.id}&title=${affair.title}&link=${encodeURIComponent('/#/@/' + affair.id)}&duration=${duration}&groups=${affair.groups}`, '/msg', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
 }
 </script>
 

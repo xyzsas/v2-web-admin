@@ -78,6 +78,7 @@ async function submit () {
     }
   }
   loading = false
-  Swal.fire('发布消息成功', `共计${us.length}个用户`, 'success')
+  await Swal.fire('发布消息成功', `共计${us.length}个用户`, 'success')
+  window.close()
 }
 </script>

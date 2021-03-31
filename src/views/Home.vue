@@ -30,7 +30,9 @@
         <button class="button is-primary" @click="go('/group/' + encodeURIComponent(state.SS.group))">用户组</button>
         <button class="button" @click="go('/user/NEW')">添加用户</button>
         <button class="button" @click="go('/batch', 700)">批量操作</button>
-        <button class="button">...</button>
+      </div>
+      <div class="panel-block buttons" style="margin: 0;">
+        <button class="button is-info" @click="go('/msg')">发布消息</button>
       </div>
       <div class="panel-block">备注：用户默认密码为<code>XYZSAS</code></div>
     </nav>
@@ -44,14 +46,6 @@
       <div class="panel-block" v-for="(v, k) in state.affairs.value">
         <item type="affair" :id="k">{{ v }}</item>
       </div>
-    </nav>
-    <nav class="panel">
-      <p class="panel-heading" @click="go('/msg')">
-        <span class="icon">
-          <i class="mdi mdi-24px mdi-message"></i>
-        </span>
-        {{ loading || '消息管理' }}
-      </p>
     </nav>
   </div>
 </template>
