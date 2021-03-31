@@ -45,6 +45,14 @@
         <item type="affair" :id="k">{{ v }}</item>
       </div>
     </nav>
+    <nav class="panel">
+      <p class="panel-heading" @click="go('/msg')">
+        <span class="icon">
+          <i class="mdi mdi-24px mdi-message"></i>
+        </span>
+        {{ loading || '消息管理' }}
+      </p>
+    </nav>
   </div>
 </template>
 

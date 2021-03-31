@@ -10,10 +10,16 @@
     <div class="p-1 mt-2 is-small" style="background-color: #eee; font-size: 0.7rem;">此处显示预设模板的描述信息以及其它指南等</div>
     <label class="label mt-2">预设参数</label>
     <textarea rows="10" class="yml" v-model="input"></textarea>
-    <div class="buttons mt-2">
-      <button class="button is-primary mt-2 is-small">应用预设</button>
-    </div>
   </template>
+  <div class="buttons mt-2">
+    <button v-if="preset" class="button is-primary is-small">应用预设</button>
+    <button class="button is-small is-info is-light" @click="code">
+      <span class="icon is-small">
+        <i class="mdi mdi-18px mdi-code-tags"></i>
+      </span>
+      <span>高级编辑</span>
+    </button>
+  </div>
 </template>
 
 <script setup>
