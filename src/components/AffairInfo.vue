@@ -6,12 +6,7 @@
         <label class="label">标题：</label>
         <input v-model="a.title" class="input is-small">
         <label class="label mt-2">用户组：</label>
-        <div class="select is-small is-multiple" v-if="!a.anonymous">
-          <select multiple size="4" v-model="a.groups" style="width: 100vh;">
-            <option v-for="g in displayGroups">{{ g }}</option>
-          </select>
-          <p class="mb-2">电脑端请按住<code>Ctrl</code>键点击选择</p>
-        </div>
+        <group-selector v-if="!a.anonymous" v-model="a.groups"></group-selector>
         <label class="checkbox" :style="{ color: a.anonymous ? 'red' : 'black' }">
           <input v-model="a.anonymous" type="checkbox">
           允许匿名访问
@@ -41,26 +36,12 @@
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
+import { defineProps } from 'vue'
 import { groups } from '../plugins/state.js'
 import Item from '../components/Item.vue'
 import AffairPreset from '../components/AffairPreset.vue'
+import GroupSelector from '../components/GroupSelector.vue'
 
 const props = defineProps(['affair', 'data'])
 const a = props.affair
-
-const displayGroups = computed(() => {
-  const res = []
-  for (const g in groups.value) {
-    let useful = true
-    for (const s of a.groups) {
-      if (g.indexOf(s) == 0 && g != s) {
-        useful = false
-        break
-      }
-    }
-    if (useful) res.push(g)
-  }
-  return res
-})
 </script>

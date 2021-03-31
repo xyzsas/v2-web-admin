@@ -7,12 +7,7 @@
         <div class="buttons mt-3" v-if="affair">
           <button class="button is-small is-primary" :class="{ 'is-loading': loading }" @click="submit">提交事务信息</button>
           <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除事务</button>
-          <button class="button is-small is-info is-light" @click="code">
-            <span class="icon is-small">
-              <i class="mdi mdi-18px mdi-code-tags"></i>
-            </span>
-            <span>高级编辑</span>
-          </button>
+          <button class="button is-small is-info" @click="msg">发布消息</button>
         </div>
       </div>
       <div class="tile is-child">
@@ -55,7 +50,6 @@ function getAffair () {
   axios.get('/affair?affair=' + id.value, token())
     .then(({ data }) => {
       affair = data
-      affair.groups = affair.groups.split(',')
       const vars = {}
       for (const k in affair) {
         if (k.indexOf('V:') === 0) {
@@ -95,6 +89,15 @@ async function submit () {
   loading = false
 }
 
+function msg () {
+  const ms2s = t => Math.floor(t/1000)
+  const duration = affair.end
+    ? Math.min(ms2s(affair.end - Date.now()), 604800)
+    : affair.start
+      ? Math.min(ms2s(affair.start - Date.now()) + 86400, 604800)
+      : 604800
+  window.open(`./#/msg?id=${affair.id}&title=${affair.title}&link=${encodeURIComponent('/#/@/' + affair.id)}&duration=${duration}&groups=${affair.groups}`, '/msg', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=360')
+}
 </script>
 
 <style scoped>

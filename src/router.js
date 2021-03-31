@@ -23,7 +23,7 @@ const routes = [
   },
   {
     path: '/msg',
-    component: () => import('./views/Message.vue')
+    component: () => import('./views/Msg.vue')
   }
 ]
 
