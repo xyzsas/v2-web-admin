@@ -20,6 +20,10 @@ const routes = [
   {
     path: '/batch',
     component: () => import('./views/Batch.vue')
+  },
+  {
+    path: '/msg',
+    component: () => import('./views/Message.vue')
   }
 ]
 
