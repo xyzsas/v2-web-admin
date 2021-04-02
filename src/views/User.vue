@@ -21,22 +21,11 @@
     <button class="button is-small is-info" v-if="msgloading && user" @click="getMsg">载入消息</button>
     <div class="box" v-if="!msgloading" style="margin-top: 20px;">
       <h2 class="title is-5" style="margin-bottom: 10px;">消息</h2>
-      <table class="table">
-        <thead>
-          <tr>
-            <th title="Played">标题</th>
-            <th title="Played">副标题</th>
-            <th title="Played">链接</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="i in msgs">
-            <td>{{ i[0] }}</td>
-            <td>{{ i[1] }}</td>
-            <a>{{ i[2] }}</a>
-          </tr>
-        </tbody>
-      </table>
+      <div class="card" v-for="i in msgs" style="margin-bottom: 10px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <div class="title is-4" style="margin-bottom: 5px;">{{ i[0] }}</div>
+        <div class="title is-6" style="margin-bottom: 5px;">{{ i[1] }}</div>
+        <a style="margin-bottom: 5px;">{{ i[2] }}</a>
+      </div>
     </div>
   </div>
 </template>
