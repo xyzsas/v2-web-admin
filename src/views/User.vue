@@ -43,6 +43,7 @@ const router = useRouter(), route = useRoute()
 
 ref: user = null
 ref: username = ''
+ref: loading = false
 ref: msgs = null
 ref: msgloading = false
 ref: profile = null
@@ -72,21 +73,9 @@ function getUser () {
     .catch(catchErr)
 }
 
-async function getMsg() {
-  msgloading = true
-  await axios.get('/msg?user=' + id.value, token())
-    .then(({ data }) => { 
-      msgs = data.map(x => x.split('$$'))
-      msgloading = false
-    })
-    .catch(catchErr)
-  msgloading = false
-}
-
 if (route.params.id != 'NEW') getUser()
 else user = {}
 
-ref: loading = false
 async function submit () {
   if (!id.value) return
   if (user.group.indexOf(SS.group) != 0 || user.group[user.group.length-1] != '/') {
@@ -122,6 +111,13 @@ async function remove () {
   loading = false
 }
 
+async function getMsg() {
+  msgloading = true
+  await axios.get('/msg?user=' + id.value, token())
+    .then(({ data }) => { msgs = data.map(x => x.split('$$')) })
+    .catch(catchErr)
+  msgloading = false
+}
 </script>
 
 <style scoped>
