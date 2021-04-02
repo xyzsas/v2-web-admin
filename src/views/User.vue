@@ -18,6 +18,15 @@
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
     </div>
+    <button class="button is-small is-info" v-if="msgloading && user" @click="getMsg">载入消息</button>
+    <div class="box" v-if="!msgloading" style="margin-top: 20px;">
+      <h2 class="title is-5" style="margin-bottom: 10px;">消息</h2>
+      <div class="card" v-for="i in msgs" style="margin-bottom: 10px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+        <div class="title is-4" style="margin-bottom: 5px;">{{ i[0] }}</div>
+        <div class="title is-6" style="margin-bottom: 5px;">{{ i[1] }}</div>
+        <a style="margin-bottom: 5px;">{{ i[2] }}</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,8 +38,11 @@ import { SS, token, users, userdata } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 
+ref: msgs = null
 ref: user = null
 ref: username = ''
+ref: msgloading = true
+
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(users, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
@@ -52,6 +64,16 @@ const catchErr = async e => {
 function getUser () {
   axios.get('/user?user=' + id.value, token())
     .then(({ data }) => { user = data })
+    .catch(catchErr)
+}
+
+function getMsg() {
+  console.log(id.value)
+  axios.get('/msg?user=' + id.value, token())
+    .then(({ data }) => { 
+      msgs = data.map(x => x.split('$$'))
+      msgloading = false
+    })
     .catch(catchErr)
 }
 
