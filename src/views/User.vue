@@ -1,8 +1,8 @@
 <template>
   <div class="p-4">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
-    <code>{{ id }}</code>
-    <div class="box" v-if="user" style="margin-top: 20px;">
+    <code class="is-inline-block mb-4">{{ id }}</code>
+    <div class="box" v-if="user">
       <template v-if="route.params.id == 'NEW'">
         <label class="label">登录用户名：</label>
         <input v-model="username" class="input is-small">
@@ -18,6 +18,18 @@
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
     </div>
+    <div class="buttons">
+      <button class="button is-small is-link" :class="{ 'is-loading': profileloading }" v-if="route.params.id != 'NEW' && !profile">载入用户档案</button>
+      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="route.params.id != 'NEW' && !msgs" @click="getMsg">载入用户消息</button>
+    </div>
+    <div v-if="msgs">
+      <h2 class="title is-5 mt-6">用户消息</h2>
+      <div class="box" v-for="i in msgs">
+        <div class="title is-4">{{ i[0] }}</div>
+        <div class="subtitle is-6 mb-1">{{ i[1] }}</div>
+        <a>{{ i[2] }}</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -31,6 +43,12 @@ const router = useRouter(), route = useRoute()
 
 ref: user = null
 ref: username = ''
+ref: loading = false
+ref: msgs = null
+ref: msgloading = false
+ref: profile = null
+ref: profileloading = false
+
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(users, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
@@ -58,7 +76,6 @@ function getUser () {
 if (route.params.id != 'NEW') getUser()
 else user = {}
 
-ref: loading = false
 async function submit () {
   if (!id.value) return
   if (user.group.indexOf(SS.group) != 0 || user.group[user.group.length-1] != '/') {
@@ -94,6 +111,13 @@ async function remove () {
   loading = false
 }
 
+async function getMsg() {
+  msgloading = true
+  await axios.get('/msg?user=' + id.value, token())
+    .then(({ data }) => { msgs = data.map(x => x.split('$$')) })
+    .catch(catchErr)
+  msgloading = false
+}
 </script>
 
 <style scoped>
