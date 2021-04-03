@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div class="p-4" style="max-width: 500px;">
     <h1 class="title is-4">消息 - 发布</h1>
     <div class="box">
       <template v-if="!byUser">
