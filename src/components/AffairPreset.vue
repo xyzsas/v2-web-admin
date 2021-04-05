@@ -36,7 +36,7 @@ ref: preset = null
 ref: presets = []
 ref: input = a.params || ''
 ref: loading = true
-let template
+let template, codeWindow
 
 const catchErr = e => {
   console.log(e)
@@ -62,9 +62,15 @@ async function select () {
     return
   }
   loading = true
-  preset = await import(getUrl('preset' + id, presets[id], template))
-  console.log(preset)
-  input = jsyaml.dump(preset.params)
+  try {
+    preset = await import(getUrl('preset' + id, presets[id], template))
+    console.log(preset)
+    input = jsyaml.dump(preset.params)
+  } catch (e) {
+    Swal.fire('预设载入错误', '', 'error')
+    console.error(e)
+    id = ''
+  }
   loading = false
 }
 
@@ -77,13 +83,19 @@ async function apply () {
   }
   try {
     const res = await preset.generate(params)
-    console.log(res)
     for (const k in res) a[k] = res[k]
     a.preset = id
     a.params = input
+    if (codeWindow) codeWindow.updateCode(a.content)
     Swal.fire('预设应用成功', '', 'success')
   } catch (e) {
     Swal.fire('预设模板错误', e.toString(), 'error')
   }
+}
+
+function code () {
+  window.updateCode = c => { a.content = c }
+  codeWindow = window.open('./#/code', '/code', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=10000,height=600,width=500')
+  codeWindow.initialCode = a.content
 }
 </script>
