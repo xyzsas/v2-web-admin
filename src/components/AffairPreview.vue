@@ -1,6 +1,7 @@
 <template>
   <div class="preview box tile is-child">
     <h1 class="title">{{ a.title }}<span class="tag is-info is-light">预览</span></h1>
+    <p>Under development</p>
   </div>
 </template>
 

@@ -3,7 +3,7 @@
   <div class="select is-small" :class="{ 'is-loading': loading }">
     <select v-model="id" style="width: 100vh;" @change="select">
       <option value="">无预设</option>
-      <option v-for="(v, p) in presets" :value="p">{{ p }}</option>
+      <option v-for="(v, p) in presets" :value="p">{{ p.replace('.js', '') }}</option>
     </select>
   </div>
   <template v-if="preset">
@@ -12,7 +12,7 @@
     <textarea rows="10" class="yml" v-model="input"></textarea>
   </template>
   <div class="buttons mt-2">
-    <button v-if="preset" class="button is-primary is-small">应用预设</button>
+    <button v-if="preset" class="button is-primary is-small" @click="apply">应用预设</button>
     <button class="button is-small is-info is-light" @click="code">
       <span class="icon is-small">
         <i class="mdi mdi-18px mdi-code-tags"></i>
@@ -31,10 +31,10 @@ import axios from '../plugins/axios.js'
 import { token } from '../plugins/state.js'
 import { getUrl } from '../plugins/convention.js'
 
-ref: id = a && a.preset || ''
+ref: id = a.preset || ''
 ref: preset = null
 ref: presets = []
-ref: input = ''
+ref: input = a.params || ''
 ref: loading = true
 let template
 
@@ -52,6 +52,7 @@ async function init () {
   loading = false
   template = res.template
   presets = res.data
+  if (id) select()
 }
 init()
 
@@ -63,6 +64,26 @@ async function select () {
   loading = true
   preset = await import(getUrl('preset' + id, presets[id], template))
   console.log(preset)
+  input = jsyaml.dump(preset.params)
   loading = false
+}
+
+async function apply () {
+  const params = jsyaml.load(input)
+  const err = await preset.check(params)
+  if (err) {
+    Swal.fire('预设参数错误', err, 'error')
+    return
+  }
+  try {
+    const res = await preset.generate(params)
+    console.log(res)
+    for (const k in res) a[k] = res[k]
+    a.preset = id
+    a.params = input
+    Swal.fire('预设应用成功', '', 'success')
+  } catch (e) {
+    Swal.fire('预设模板错误', e.toString(), 'error')
+  }
 }
 </script>

@@ -13,4 +13,7 @@
   width: 100%;
   font-size: 0.75rem;
 }
+.yml::placeholder {
+  color: #aaa;
+}
 </style>
