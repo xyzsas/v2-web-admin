@@ -3,7 +3,7 @@
   <div class="select is-small" :class="{ 'is-loading': loading }">
     <select v-model="id" style="width: 100vh;" @change="select">
       <option value="">无预设</option>
-      <option v-for="(v, p) in presets" :value="p">{{ p }}</option>
+      <option v-for="(v, p) in presets" :value="p">{{ p.replace('.js', '') }}</option>
     </select>
   </div>
   <template v-if="preset">
