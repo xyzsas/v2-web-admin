@@ -39,7 +39,7 @@ ref: loading = false
 ref: set = false
 async function reset () {
   loading = true
-  await axios.post('/user', { [props.id]: { password: 1 } }, opt)
+  await axios.post('/user/', { [props.id]: { password: 1 } }, opt)
     .then(() => {
       Swal.fire('重置密码成功', '初始密码为XYZSAS', 'success')
       set = true

@@ -92,11 +92,11 @@ async function init () {
   }
   try {
     loading = '正在载入事务数据 ...'
-    const { data } = await axios.get('/affair', state.token())
+    const { data } = await axios.get('/affair/', state.token())
     state.affairs.value = data
 
     loading = '正在载入用户数据 ...'
-    const res = await axios.get('/user?hash=' + md5(state.LS.userdata), state.token())
+    const res = await axios.get('/user/?hash=' + md5(state.LS.userdata), state.token())
     if (res.status == 200) state.userdata.value = res.data
     loading = ''
   } catch (e) {

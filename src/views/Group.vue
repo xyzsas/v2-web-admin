@@ -81,7 +81,7 @@ const remove = async g => {
   })
   if (!res.isConfirmed) return
   removeLoading[g] = true
-  await axios.delete('/user?group=' + g, token())
+  await axios.delete('/user/?group=' + g, token())
     .then(({ data }) => {
       Swal.fire('成功', data, 'success')
       // clean local data

@@ -68,7 +68,7 @@ const catchErr = async e => {
 }
 
 function getUser () {
-  axios.get('/user?user=' + id.value, token())
+  axios.get('/user/' + id.value, token())
     .then(({ data }) => { user = data })
     .catch(catchErr)
 }
@@ -83,7 +83,7 @@ async function submit () {
     return
   }
   loading = true
-  await axios.post('/user', { [id.value]: user }, token())
+  await axios.post('/user/', { [id.value]: user }, token())
     .then(({ data }) => {
       if (data.error[id.value]) {
         Swal.fire('错误', data.error[id.value], 'error')
@@ -102,7 +102,7 @@ async function submit () {
 async function remove () {
   if (!id.value) return
   loading = true
-  await axios.delete('/user?user=' + id.value, token())
+  await axios.delete('/user/' + id.value, token())
     .then(() => {
       Swal.fire('成功', '删除用户成功', 'success')
       if (userdata.value[user.group]) delete userdata.value[user.group][id.value]

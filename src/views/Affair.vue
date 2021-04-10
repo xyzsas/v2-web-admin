@@ -50,7 +50,7 @@ const catchErr = async e => {
 
 function getAffair () {
   affair = null
-  axios.get('/affair?affair=' + id.value, token())
+  axios.get('/affair/' + id.value, token())
     .then(({ data }) => {
       affair = data
       const vars = {}
@@ -63,7 +63,7 @@ function getAffair () {
       affair.variables = Object.keys(vars).length ? jsyaml.dump(vars) : ''
     })
     .catch(catchErr)
-  axios.get('/data?affair=' + id.value, token())
+  axios.get('/data/?affair=' + id.value, token())
     .then(res => { data = res.data })
     .catch(catchErr)
 }
@@ -77,7 +77,6 @@ async function submit () {
     return
   }
   const a = {
-    id: id.value,
     title: affair.title,
     groups: affair.groups,
     content: affair.content,
@@ -92,7 +91,7 @@ async function submit () {
   const vars = jsyaml.load(affair.variables)
   for (const k in vars) a['V:' + k] = vars[k]
   loading = true
-  await axios.post('/affair', a, token())
+  await axios.post('/affair/' + id.value, a, token())
     .then(() => {
       Swal.fire('成功', '', 'success')
       affairs.value[id.value] = affair.title
@@ -117,9 +116,9 @@ async function remove () {
   loading = true
   try {
     for (const d of data) {
-      await axios.delete('/data?data=' + d, token())
+      await axios.delete('/data/' + d, token())
     }
-    await axios.delete('/affair?affair=' + id.value, token())
+    await axios.delete('/affair/' + id.value, token())
     delete affairs.value[id.value]
     Swal.fire('删除事务成功', '', 'success')
   } catch (e) {

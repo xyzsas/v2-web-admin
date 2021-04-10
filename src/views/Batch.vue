@@ -70,7 +70,7 @@ async function submit () {
       if (!u) break
       body[u.id] = { group: u.group, name: u.name, role: u.role, password: u.password }
     }
-    const res = await axios.post('/user', body, token())
+    const res = await axios.post('/user/', body, token())
       .then(({ data }) => {
         for (let j = 0; j < 100; j++) {
           const u = display.value[list[i + j]]
