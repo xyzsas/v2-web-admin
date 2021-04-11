@@ -24,10 +24,10 @@
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
-      <div class="box" v-for="i in msgs">
-        <div class="title is-4">{{ i[0] }}</div>
-        <div class="subtitle is-6 mb-1">{{ i[1] }}</div>
-        <a>{{ i[2] }}</a>
+      <div class="box" v-for="(m, id) in msgs">
+        <div class="title is-4">{{ m.msg[0] }}</div>
+        <div class="subtitle is-6 mb-1">{{ m.msg[1] }}</div>
+        <a>{{ m.msg[2] }}</a>
       </div>
     </div>
   </div>
@@ -113,8 +113,11 @@ async function remove () {
 
 async function getMsg() {
   msgloading = true
-  await axios.get('/msg?user=' + id.value, token())
-    .then(({ data }) => { msgs = data.map(x => x.split('$$')) })
+  await axios.get('/msg/' + id.value, token())
+    .then(({ data }) => {
+      for (const k in data) data[k].msg = data[k].msg.split('$$')
+      msgs = data
+    })
     .catch(catchErr)
   msgloading = false
 }

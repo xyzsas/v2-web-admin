@@ -45,7 +45,7 @@ const catchErr = e => {
 }
 
 async function init () {
-  const res = await axios.delete('/store', token())
+  const res = await axios.get('/store/preset/', token())
     .then(({ data }) => data)
     .catch(catchErr)
   if (!res) return

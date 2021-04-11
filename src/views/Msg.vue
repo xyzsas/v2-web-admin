@@ -15,7 +15,7 @@
     <div class="box">
       <label class="label mt-2">消息id：</label>
       <input v-model="id" class="input is-small" placeholder="请输入消息id">
-      <p style="font-size: 0.7rem;">发布的消息无法删除/撤回，同样id的消息将会覆盖</p>
+      <p style="font-size: 0.7rem;">同样id的消息将会覆盖</p>
       <label class="label mt-2">消息标题：</label>
       <input v-model="title" class="input is-small" placeholder="无标题">
       <label class="label mt-2">消息副标题：</label>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { users, userdata, token } from '../plugins/state.js'
+import { users, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
@@ -40,7 +40,7 @@ const q = route.query
 
 ref: byUser = false
 ref: loading = false
-ref: id = q.id || md5(Math.random())
+ref: id = q.id || md5(Math.random().toString())
 ref: groups = q.groups || ''
 ref: title = q.title || ''
 ref: subtitle = q.subtitle || ''
@@ -50,27 +50,21 @@ ref: input = ''
 
 async function submit () {
   loading = true
-  const us = []
+  const body = { msg: title + '$$' + subtitle + '$$' + link}
+  let entities = []
+  if (duration) body.duration = duration
   if (byUser) {
     const t = input.split('\n')
     for (const u of t) {
-      if (users.value[u]) us.push(u)
+      if (users.value[u]) entities.push(u)
       const m = md5(u.toUpperCase())
-      if (users.value[m]) us.push(m)
+      if (users.value[m]) entities.push(m)
     }
-  } else {
-    const gs = groups.split(',')
-    for (const g of gs) {
-      if (!userdata.value[g]) continue
-      for (const u in userdata.value[g]) us.push(u)
-    }
-  }
-  const body = { id, msg: title + '$$' + subtitle + '$$' + link }
-  if (duration) body.duration = duration
-  for (let i = 0; i < us.length; i += 100) {
-    body.users = us.slice(i, i+100)
+  } else entities = groups.split(',')
+  for (let i = 0; i < entities.length; i += 100) {
+    body.entities = entities.slice(i, i+100)
     try {
-      await axios.post('/msg', body, token())
+      await axios.post('/msg/' + id, body, token())
     } catch (e) {
       console.log(e)
       Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
@@ -78,7 +72,7 @@ async function submit () {
     }
   }
   loading = false
-  await Swal.fire('发布消息成功', `共计${us.length}个用户`, 'success')
+  await Swal.fire('发布消息成功', `共计${entities.length}个用户/用户组`, 'success')
   window.close()
 }
 </script>
