@@ -18,9 +18,17 @@
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
     </div>
-    <div class="buttons">
-      <button class="button is-small is-link" :class="{ 'is-loading': profileloading }" v-if="route.params.id != 'NEW' && !profile">载入用户档案</button>
-      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="route.params.id != 'NEW' && !msgs" @click="getMsg">载入用户消息</button>
+    <div v-if="route.params.id == 'NEW'">
+      <h2 class="title is-5 mt-6">用户扫码设置初始密码</h2>
+      <qrcode-vue :value="qrurl" size="150"></qrcode-vue>
+    </div>
+    <div class="buttons" v-if="route.params.id != 'NEW'">
+      <button class="button is-small is-link" :class="{ 'is-loading': photoloading }" v-if="!photourl" @click="getPhoto">载入用户照片</button>
+      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
+    </div>
+    <div v-if="photourl">
+      <h2 class="title is-5 mt-6">用户照片</h2>
+      <img :src="photourl" alt="无照片" style="width: 200px;">
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
@@ -39,6 +47,8 @@ import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import { SS, token, users, userdata } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
+import QrcodeVue from 'qrcode.vue'
+
 const router = useRouter(), route = useRoute()
 
 ref: user = null
@@ -46,13 +56,15 @@ ref: username = ''
 ref: loading = false
 ref: msgs = null
 ref: msgloading = false
-ref: profile = null
-ref: profileloading = false
+ref: photourl = null
+ref: photoloading = false
 
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(users, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
 })
+
+const qrurl = computed(() => window.location.origin + '/#/password?id=' + id.value)
 
 const title = computed(() => route.params.id == 'NEW'
   ? '创建新用户'
@@ -70,6 +82,13 @@ const catchErr = async e => {
 function getUser () {
   axios.get('/user/' + id.value, token())
     .then(({ data }) => { user = data })
+    .catch(catchErr)
+}
+
+function getPhoto() {
+  photoloading = true
+  axios.get('/store/' + id.value, token())
+    .then(({ data }) => { photourl = data.photo })
     .catch(catchErr)
 }
 
