@@ -1,7 +1,7 @@
 <template>
   <div class="p-4" style="max-width: 400px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
-    <code class="is-inline-block mb-4">{{ id }}</code><br>
+    <code class="is-inline-block mb-4">{{ id }}</code>
     <div class="box" v-if="user">
       <template v-if="route.params.id == 'NEW'">
         <label class="label">登录用户名：</label>
