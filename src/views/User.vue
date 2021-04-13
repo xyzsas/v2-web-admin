@@ -17,10 +17,18 @@
         <button class="button is-small is-primary" :class="{ 'is-loading': loading }" @click="submit">提交用户信息</button>
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
-      <qrcode-vue :value="qrurl" v-if="route.params.id == 'NEW' && username" size="150"></qrcode-vue>
     </div>
-    <div class="buttons">
-      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="route.params.id != 'NEW' && !msgs" @click="getMsg">载入用户消息</button>
+    <div v-if="route.params.id == 'NEW'">
+      <h2 class="title is-5 mt-6">用户扫码设置初始密码</h2>
+      <qrcode-vue :value="qrurl" size="150"></qrcode-vue>
+    </div>
+    <div class="buttons" v-if="route.params.id != 'NEW'">
+      <button class="button is-small is-link" :class="{ 'is-loading': photoloading }" v-if="!photourl" @click="getPhoto">载入用户照片</button>
+      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
+    </div>
+    <div v-if="photourl">
+      <h2 class="title is-5 mt-6">用户照片</h2>
+      <img :src="photourl" alt="无照片" style="width: 200px;">
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
@@ -30,8 +38,6 @@
         <a>{{ m.msg[2] }}</a>
       </div>
     </div>
-    <img :src="photourl" v-if="photourl" alt="无照片">
-    <button class="button is-small is-info" :class="{ 'is-loading': photoloading }" v-if="route.params.id != 'NEW' && !photourl" @click="getPhoto" style="margin-bottom: 5px;">载入用户照片</button>
   </div>
 </template>
 
@@ -58,7 +64,7 @@ watch(users, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
 })
 
-const qrurl = computed(() => window.location.host + '/#/password?id=' + md5(username.toUpperCase()))
+const qrurl = computed(() => window.location.origin + '/#/password?id=' + id.value)
 
 const title = computed(() => route.params.id == 'NEW'
   ? '创建新用户'

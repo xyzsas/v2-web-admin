@@ -33,7 +33,7 @@ import AffairPreview from '../components/AffairPreview.vue'
 ref: affair = null
 ref: data = []
 ref: loading = false
-const id = computed(() => route.params.id == 'NEW' ? md5(Math.random()) : route.params.id)
+const id = computed(() => route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id)
 const title = computed(() => route.params.id == 'NEW'
   ? '创建新事务'
   : affair ? affair.title : '正在载入...'
