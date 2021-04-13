@@ -1,7 +1,7 @@
 <template>
   <div class="p-4" style="max-width: 400px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
-    <code class="is-inline-block mb-4">{{ id }}</code>
+    <code class="is-inline-block mb-4">{{ id }}</code><br>
     <div class="box" v-if="user">
       <template v-if="route.params.id == 'NEW'">
         <label class="label">登录用户名：</label>
@@ -17,9 +17,9 @@
         <button class="button is-small is-primary" :class="{ 'is-loading': loading }" @click="submit">提交用户信息</button>
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
+      <qrcode-vue :value="qrurl" v-if="route.params.id == 'NEW' && username" size="150"></qrcode-vue>
     </div>
     <div class="buttons">
-      <button class="button is-small is-link" :class="{ 'is-loading': profileloading }" v-if="route.params.id != 'NEW' && !profile">载入用户档案</button>
       <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="route.params.id != 'NEW' && !msgs" @click="getMsg">载入用户消息</button>
     </div>
     <div v-if="msgs">
@@ -30,6 +30,8 @@
         <a>{{ m.msg[2] }}</a>
       </div>
     </div>
+    <img :src="photourl" v-if="photourl" alt="无照片">
+    <button class="button is-small is-info" :class="{ 'is-loading': photoloading }" v-if="route.params.id != 'NEW' && !photourl" @click="getPhoto" style="margin-bottom: 5px;">载入用户照片</button>
   </div>
 </template>
 
@@ -39,6 +41,8 @@ import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import { SS, token, users, userdata } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
+import QrcodeVue from 'qrcode.vue'
+
 const router = useRouter(), route = useRoute()
 
 ref: user = null
@@ -46,13 +50,15 @@ ref: username = ''
 ref: loading = false
 ref: msgs = null
 ref: msgloading = false
-ref: profile = null
-ref: profileloading = false
+ref: photourl = null
+ref: photoloading = false
 
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(users, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
 })
+
+const qrurl = computed(() => window.location.host + '/#/password?id=' + md5(username.toUpperCase()))
 
 const title = computed(() => route.params.id == 'NEW'
   ? '创建新用户'
@@ -70,6 +76,13 @@ const catchErr = async e => {
 function getUser () {
   axios.get('/user/' + id.value, token())
     .then(({ data }) => { user = data })
+    .catch(catchErr)
+}
+
+function getPhoto() {
+  photoloading = true
+  axios.get('/store/' + id.value, token())
+    .then(({ data }) => { photourl = data.photo })
     .catch(catchErr)
 }
 
