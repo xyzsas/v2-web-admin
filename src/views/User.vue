@@ -18,9 +18,10 @@
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
     </div>
-    <div v-if="route.params.id == 'NEW'">
+    <div v-if="route.params.id == 'NEW'" style="position: relative;">
       <h2 class="title is-5 mt-6">用户扫码设置初始密码</h2>
-      <qrcode-vue :value="qrurl" size="150"></qrcode-vue>
+      <qrcode-vue :value="qrurl" size="200"></qrcode-vue>
+      <img src="/img/logo.svg" class="qrlogo">
     </div>
     <div class="buttons" v-if="route.params.id != 'NEW'">
       <button class="button is-small is-link" :class="{ 'is-loading': photoloading }" v-if="!photourl" @click="getPhoto">载入用户照片</button>
@@ -145,5 +146,12 @@ async function getMsg() {
 <style scoped>
 input {
   font-weight: bold;
+}
+.qrlogo {
+  position: absolute;
+  background-color: white;
+  width: 40px;
+  left: 80px;
+  bottom: 85px;
 }
 </style>
