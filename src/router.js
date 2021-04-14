@@ -29,6 +29,10 @@ const routes = [
   {
     path: '/code',
     component: () => import('./tools/Code.vue')
+  },
+  {
+    path: '/test',
+    component: () => import('./views/Test.vue')
   }
 ]
 
