@@ -24,15 +24,6 @@ const routes = [
   {
     path: '/msg',
     component: () => import('./views/Msg.vue')
-  },
-  // following are tools
-  {
-    path: '/code',
-    component: () => import('./tools/Code.vue')
-  },
-  {
-    path: '/test',
-    component: () => import('./views/Test.vue')
   }
 ]
 
