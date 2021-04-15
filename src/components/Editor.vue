@@ -18,12 +18,10 @@ export default {
   setup: (props, ctx) => {
     const innerText = ref(props.modelValue)
 
-    function clean (html) { // clean html
-      return html
-        .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-        .replace(/<!--(.*?)-->/g, '') // clean comment
-        .replace(/<span(.*?)>/g, '').replace(/<\/span>/g, '') // clean span
-    }
+    const clean = html => html
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      .replace(/<!--(.*?)-->/g, '') // clean comment
+      .replace(/<span(.*?)>/g, '').replace(/<\/span>/g, '') // clean span
 
     function recover (html) { // recover pieces
       const raw = html.match(/<div piece-start="(.*?)"(.*?)<div piece-end=""><\/div><\/div>/g)
@@ -45,7 +43,6 @@ export default {
       html = recover(html)
       ctx.emit('update:modelValue', html)
       innerText.value = html
-      console.log(html)
     }
 
     const h = compile(`<div id="editor" class="content editor" contenteditable="true" @blur="blur">${innerText.value}</div>`, { onError })

@@ -28,7 +28,7 @@
 <script setup>
 import { watch } from 'vue'
 import axios from '../plugins/axios.js'
-import { token, SS } from '../plugins/state.js'
+import { token, SS, pieces } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
@@ -52,6 +52,7 @@ const catchErr = async e => {
 
 async function getAffair () {
   affair = null
+  pieces.value = {}
   affair = await axios.get('/affair/' + id, token())
     .then(({ data }) => data)
     .catch(catchErr)
@@ -63,6 +64,7 @@ async function getAffair () {
     }
   }
   affair.variables = Object.keys(vars).length ? jsyaml.dump(vars) : ''
+  if (affair.pieces) pieces.value = JSON.parse(affair.pieces)
   axios.get('/data/?affair=' + id, token())
     .then(res => { data = res.data })
     .catch(catchErr)

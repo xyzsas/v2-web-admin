@@ -7,7 +7,7 @@
     </div>
     <div class="field has-addons is-justify-content-center">
       <p class="control" style="flex-grow: 1;">
-        <button class="button is-info is-small is-fullwidth" @click="msg">发布事务</button>
+        <button class="button is-info is-small is-fullwidth" @click="msg">发布消息</button>
       </p>
       <p class="control" style="flex-grow: 1;">
         <button class="button is-danger is-small is-fullwidth" @click="remove" :class="{ 'is-loading': loading }">删除事务</button>
@@ -60,7 +60,7 @@ async function submit () {
     title: props.affair.title,
     groups: props.affair.groups,
     content: props.affair.content,
-    refs: props.affair.refs,
+    refs: props.affair.refs
   }
   if (props.affair.start) an.start = props.affair.start
   if (props.affair.end) an.end = props.affair.end
