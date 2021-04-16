@@ -36,7 +36,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import axios from '../plugins/axios.js'
-import { token } from '../plugins/state.js'
+import { AS, token } from '../plugins/state.js'
 import format from '../plugins/format.js'
 import Loading from '../components/Loading.vue'
 const props = defineProps(['affair', 'data', 'settings'])
@@ -70,7 +70,7 @@ async function submit () {
   await axios.post('/affair/' + props.affair.id, an, token())
     .then(() => {
       Swal.fire('成功', '', 'success')
-      affairs.value[props.affair.id] = an.title
+      AS.value[props.affair.id] = an.title
     })
     .catch(catchErr)
   loading = false
@@ -94,7 +94,7 @@ async function remove () {
       await axios.delete('/data/' + d, token())
     }
     await axios.delete('/affair/' + props.affair.id, token())
-    delete affairs.value[props.affair.id]
+    delete AS.value[props.affair.id]
     Swal.fire('删除事务成功', '', 'success')
   } catch (e) {
     catchErr(e)
