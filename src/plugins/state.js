@@ -3,6 +3,7 @@ import { ref, computed, watch, watchEffect } from 'vue'
 export const SS = window.sessionStorage
 export const LS = window.localStorage
 export const token = () => ({ headers: { token: SS.token } })
+export const pieces = ref({})
 
 export const userdata = ref({})
 export const affairs = ref({})
