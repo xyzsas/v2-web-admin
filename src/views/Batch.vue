@@ -32,7 +32,7 @@
 import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
-import { token, users, userdata } from '../plugins/state.js'
+import { token, US, userdata } from '../plugins/state.js'
 ref: input = ''
 ref: loading = false
 ref: error = {}
@@ -83,11 +83,11 @@ async function submit () {
             // update localstorage
             // these lines are exactly the same as in the Back end
             const dels = []
-            if (users.value[u.id] && u.group && u.group != users.value[u.id][1]) dels.push({ group: users.value[u.id][1], id: u.id })
-            if (!users.value[u.id] || (u.group && u.group != users.value[u.id][1]) || (u.name && u.name != users.value[u.id][0])) {
-              const gr = u.group || users.value[u.id][1]
+            if (US.value[u.id] && u.group && u.group != US.value[u.id][1]) dels.push({ group: US.value[u.id][1], id: u.id })
+            if (!US.value[u.id] || (u.group && u.group != US.value[u.id][1]) || (u.name && u.name != US.value[u.id][0])) {
+              const gr = u.group || US.value[u.id][1]
               if (!userdata.value[gr]) userdata.value[gr] = {}
-              userdata.value[gr][u.id] = u.name || users.value[u.id][0]
+              userdata.value[gr][u.id] = u.name || US.value[u.id][0]
             }
             for (const d of dels) delete userdata.value[d.group][d.id]
           }

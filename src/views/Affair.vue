@@ -28,7 +28,7 @@
 <script setup>
 import { watch } from 'vue'
 import axios from '../plugins/axios.js'
-import { affairs, token, SS, pieces } from '../plugins/state.js'
+import { AS, SS, PS, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
@@ -44,7 +44,7 @@ ref: affair = null
 ref: data = []
 ref: settings = { code: false }
 
-watch(() => affairs.value[id], v => {
+watch(() => AS.value[id], v => {
   if (!v) setTimeout(window.close, 2000)
 })
 
@@ -56,7 +56,7 @@ const catchErr = async e => {
 
 async function getAffair () {
   affair = null
-  pieces.value = {}
+  PS.value = {}
   affair = await axios.get('/affair/' + id, token())
     .then(({ data }) => data)
     .catch(catchErr)
@@ -74,7 +74,10 @@ async function getAffair () {
 }
 
 if (route.params.id != 'NEW') getAffair()
-else affair = { id, groups: SS.group, vars: '', content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
+else {
+  PS.value = {}
+  affair = { id, groups: SS.group, vars: '', content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
+}
 </script>
 
 <style scoped>

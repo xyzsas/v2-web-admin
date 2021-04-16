@@ -1,15 +1,15 @@
 import { ref, computed, watch, watchEffect } from 'vue'
 
+export const userdata = ref({})
+
 export const SS = window.sessionStorage
 export const LS = window.localStorage
-export const PS = ref({})
+export const PS = ref({}) // pieces
+export const AS = ref({}) // affairs
 export const token = () => ({ headers: { token: SS.token } })
 
-export const userdata = ref({})
-export const affairs = ref({})
-
 // computed
-export const users = computed(() => {
+export const US = computed(() => { // users
   const res = {}
   for (const g in userdata.value) {
     for (const u in userdata.value[g]) {
@@ -18,7 +18,7 @@ export const users = computed(() => {
   }
   return res
 })
-export const groups = computed(() => {
+export const GS = computed(() => { // groups
   if (!SS.group) return {}
   const res = { [SS.group]: 1 }
   for (const g in userdata.value) {
@@ -32,7 +32,7 @@ export const groups = computed(() => {
 
 // initialize from cache
 userdata.value = LS.userdata ? JSON.parse(LS.userdata) : {}
-affairs.value = LS.affairs ? JSON.parse(LS.affairs) : {}
+AS.value = LS.affairs ? JSON.parse(LS.affairs) : {}
 
 // sync among windows and tabs
 watchEffect(() => {
@@ -42,7 +42,7 @@ watchEffect(() => {
   console.log('userdata updated')
 })
 watchEffect(() => {
-  const s = JSON.stringify(affairs.value)
+  const s = JSON.stringify(AS.value)
   if (LS.affairs == s) return
   else LS.affairs = s
   console.log('affairs updated')
@@ -51,5 +51,5 @@ watchEffect(() => {
 // only called by other window
 window.addEventListener('storage', e => {
   if (e.key == 'userdata') userdata.value = JSON.parse(e.newValue)
-  if (e.key == 'affairs') affairs.value = JSON.parse(e.newValue)
+  if (e.key == 'affairs') AS.value = JSON.parse(e.newValue)
 })

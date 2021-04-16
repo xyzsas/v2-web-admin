@@ -46,7 +46,7 @@
 import { computed, watch } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
-import { SS, token, users, userdata } from '../plugins/state.js'
+import { SS, US, userdata, token } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 
@@ -61,7 +61,7 @@ ref: photourl = null
 ref: photoloading = false
 
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
-watch(users, v => {
+watch(US, v => {
   if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
 })
 
@@ -109,7 +109,7 @@ async function submit () {
         Swal.fire('错误', data.error[id.value], 'error')
       } else {
         Swal.fire('成功', '提交信息成功', 'success')
-        const oldGroup = users.value[id.value] && users.value[id.value][1]
+        const oldGroup = US.value[id.value] && US.value[id.value][1]
         if (oldGroup) delete userdata.value[oldGroup][id.value]
         if (userdata.value[user.group]) userdata.value[user.group][id.value] = user.name
         else userdata.value[user.group] = { [id.value]: user.name }

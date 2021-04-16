@@ -34,7 +34,7 @@
 
 <script setup>
 import { computed, watch } from 'vue'
-import { groups, userdata, token } from '../plugins/state.js'
+import { GS, userdata, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import { useRoute } from 'vue-router'
 import Item from '../components/Item.vue'
@@ -42,19 +42,19 @@ const route = useRoute()
 const root = route.params.id
 const rootLevel = (root.match(/\//g) || []).length
 
-watch(groups, v => {
-  if (!v[root]) setTimeout(window.close, 2000)
+watch(() => GS.value[root], v => {
+  if (!v) setTimeout(window.close, 2000)
 })
 
 ref: expand = {}
 ref: select = ''
 
-for (const g in groups.value) expand[g] = true
+for (const g in GS.value) expand[g] = true
 
 const items = computed(() => {
   const res = []
   let lastClose = '~'
-  for (const g in groups.value) {
+  for (const g in GS.value) {
     if (g.indexOf(root) || !g.indexOf(lastClose)) continue
     res.push({
       group: g,

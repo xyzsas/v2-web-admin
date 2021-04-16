@@ -18,7 +18,7 @@
 import { defineProps, computed } from 'vue'
 
 import axios from '../plugins/axios.js'
-const opt = { headers: { token: window.sessionStorage.token } }
+import { token } from '../plugins/state.js'
 
 const props = defineProps(['type', 'id'])
 const icon = computed(() => ({
@@ -39,7 +39,7 @@ ref: loading = false
 ref: set = false
 async function reset () {
   loading = true
-  await axios.post('/user/', { [props.id]: { password: 1 } }, opt)
+  await axios.post('/user/', { [props.id]: { password: 1 } }, token())
     .then(() => {
       Swal.fire('重置密码成功', '初始密码为XYZSAS', 'success')
       set = true

@@ -11,6 +11,7 @@
 
 <script setup>
 import { defineProps } from 'vue'
+import { PS } from '../plugins/state.js'
 const props = defineProps(['id'])
 ref: id = props.id
 </script>

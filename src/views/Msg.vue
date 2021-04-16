@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { users, token } from '../plugins/state.js'
+import { US, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
@@ -56,9 +56,9 @@ async function submit () {
   if (byUser) {
     const t = input.split('\n')
     for (const u of t) {
-      if (users.value[u]) entities.push(u)
+      if (US.value[u]) entities.push(u)
       const m = md5(u.toUpperCase())
-      if (users.value[m]) entities.push(m)
+      if (US.value[m]) entities.push(m)
     }
   } else entities = groups.split(',')
   for (let i = 0; i < entities.length; i += 100) {

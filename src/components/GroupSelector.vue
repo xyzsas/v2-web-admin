@@ -12,12 +12,12 @@ import { computed, defineProps, defineEmit } from 'vue'
 const props = defineProps(['modelValue'])
 const emit = defineEmit(['update:modelValue'])
 
-import { groups } from '../plugins/state.js'
+import { GS } from '../plugins/state.js'
 
 ref: selected = props.modelValue ? props.modelValue.split(',') : []
 const displayGroups = computed(() => {
   const res = []
-  for (const g in groups.value) {
+  for (const g in GS.value) {
     let useful = true
     for (const s of selected) {
       if (g.indexOf(s) == 0 && g != s) {
