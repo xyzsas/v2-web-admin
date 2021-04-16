@@ -19,7 +19,7 @@
         <affair-control :affair="affair" :settings="settings" :data="data"></affair-control>
       </div>
       <div class="tile is-child box">
-        <affair-variables :affair="affair"></affair-variables>
+        <affair-vars :affair="affair"></affair-vars>
       </div>
     </div>
   </div>
@@ -28,21 +28,25 @@
 <script setup>
 import { watch } from 'vue'
 import axios from '../plugins/axios.js'
-import { token, SS, pieces } from '../plugins/state.js'
+import { affairs, token, SS, pieces } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 // components
 import AffairInfo from '../components/AffairInfo.vue'
 import AffairData from '../components/AffairData.vue'
+import AffairVars from '../components/AffairVars.vue'
 import AffairControl from '../components/AffairControl.vue'
-import AffairVariables from '../components/AffairVariables.vue'
 import AffairWorkspace from '../components/AffairWorkspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
 ref: affair = null
 ref: data = []
 ref: settings = { code: false }
+
+watch(() => affairs.value[id], v => {
+  if (!v) setTimeout(window.close, 2000)
+})
 
 const catchErr = async e => {
   console.log(e)
@@ -56,22 +60,21 @@ async function getAffair () {
   affair = await axios.get('/affair/' + id, token())
     .then(({ data }) => data)
     .catch(catchErr)
-  const vars = {}
+  affair.vars = {}
   for (const k in affair) {
-    if (k.indexOf('V:') === 0) {
-      vars[k.replace(/^V:/, '')] = affair[k]
+    if (k[0] == '$') {
+      affair.vars[k] = affair[k]
       delete affair[k]
     }
   }
-  affair.variables = Object.keys(vars).length ? jsyaml.dump(vars) : ''
-  if (affair.pieces) pieces.value = JSON.parse(affair.pieces)
+  affair.vars = Object.keys(affair.vars).length ? jsyaml.dump(affair.vars) : ''
   axios.get('/data/?affair=' + id, token())
     .then(res => { data = res.data })
     .catch(catchErr)
 }
 
 if (route.params.id != 'NEW') getAffair()
-else affair = { id, groups: SS.group, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
+else affair = { id, groups: SS.group, vars: '', content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
 </script>
 
 <style scoped>

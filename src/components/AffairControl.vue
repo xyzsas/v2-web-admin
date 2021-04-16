@@ -34,17 +34,13 @@
 </template>
 
 <script setup>
-import { defineProps, watch } from 'vue'
+import { defineProps } from 'vue'
 import axios from '../plugins/axios.js'
-import { affairs, token } from '../plugins/state.js'
+import { token } from '../plugins/state.js'
 import format from '../plugins/format.js'
 import Loading from '../components/Loading.vue'
 const props = defineProps(['affair', 'data', 'settings'])
 ref: loading = false
-
-watch(() => affairs.value[props.affair.id], v => {
-  if (!v) setTimeout(window.close, 2000)
-})
 
 const catchErr = async e => {
   console.log(e)
@@ -68,8 +64,8 @@ async function submit () {
   if (props.affair.anonymous) an.anonymous = props.affair.anonymous
   if (props.affair.preset) an.preset = props.affair.preset
   if (props.affair.params) an.params = props.affair.params
-  const vars = jsyaml.load(props.affair.variables)
-  for (const k in vars) an['V:' + k] = vars[k]
+  const vars = jsyaml.load(props.affair.vars)
+  for (const k in vars) if (k[0] === '$') an[k] = vars[k]
   loading = true
   await axios.post('/affair/' + props.affair.id, an, token())
     .then(() => {

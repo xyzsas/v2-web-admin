@@ -3,7 +3,7 @@
   <loading v-if="!props.affair || !props.data">正在载入... </loading>
   <template v-else>
     <p v-if="!props.data.length">暂无数据</p>
-    <item v-for="d in props.data" :id="d" type="data">{{ d.replace(`${affair.id}.P:`, '组件 ') }}</item>
+    <item v-for="d in props.data" :id="d" type="data">{{ d.replace(`${props.affair.id}$`, '').replace(/^_/, '组件 ') }}</item>
   </template>
 </template>
 
