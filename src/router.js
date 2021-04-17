@@ -24,6 +24,10 @@ const routes = [
   {
     path: '/msg',
     component: () => import('./views/Msg.vue')
+  },
+  {
+    path: '/preset',
+    component: () => import('./views/Preset.vue')
   }
 ]
 
