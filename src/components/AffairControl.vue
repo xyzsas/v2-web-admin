@@ -15,7 +15,7 @@
     </div>
     <hr class="mt-0 mb-2">
     <h2 class="title is-6 mb-2">预设模板：</h2>
-    <code style="display: block;">{{ props.affair.preset || '未应用预设模板' }}</code>
+    <code style="display: block;">{{ props.affair.preset ? props.affair.preset.replace('.js', '') : '未应用预设模板' }}</code>
     <div class="buttons mt-2">
       <button class="button is-fullwidth is-primary is-small is-light" @click="preset">
         <span class="icon is-small">
@@ -125,6 +125,6 @@ function preset () {
     for (const k in a) props.affair[k] = a[k]
   }
   const win = window.open('./#/preset', '/preset', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=0,height=600,width=360')
-  win.init = { preset: props.affair.preset, params: props.affair.params }
+  win.init = { affair: props.affair.id, preset: props.affair.preset, params: props.affair.params }
 }
 </script>
