@@ -27,19 +27,19 @@
         <span class="icon is-small">
           <i class="mdi mdi-18px mdi-code-tags"></i>
         </span>
-        <span>{{ props.settings.code ? '显示渲染效果' : '显示原始代码' }}</span>
+        <span>{{ CS.code ? '显示渲染效果' : '显示原始代码' }}</span>
       </button>
     </div>
   </template>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, nextTick } from 'vue'
 import axios from '../plugins/axios.js'
-import { AS, token } from '../plugins/state.js'
+import { AS, CS, PS, token } from '../plugins/state.js'
 import format from '../plugins/format.js'
 import Loading from '../components/Loading.vue'
-const props = defineProps(['affair', 'data', 'settings'])
+const props = defineProps(['affair', 'data'])
 ref: loading = false
 
 const catchErr = async e => {
@@ -52,6 +52,10 @@ async function submit () {
     Swal.fire('错误', '标题、用户组、事务内容不能为空', 'error')
     return
   }
+  loading = true
+  // wait for pieces
+  await nextTick()
+  await nextTick()
   const an = {
     title: props.affair.title,
     groups: props.affair.groups,
@@ -66,7 +70,7 @@ async function submit () {
   if (props.affair.params) an.params = props.affair.params
   const vars = jsyaml.load(props.affair.vars)
   for (const k in vars) if (k[0] === '$') an[k] = vars[k]
-  loading = true
+  for (const k in PS.value) an[k] = JSON.stringify(PS.value[k])
   await axios.post('/affair/' + props.affair.id, an, token())
     .then(() => {
       Swal.fire('成功', '', 'success')
@@ -113,10 +117,10 @@ function msg () {
 }
 
 function code () {
-  if (props.settings.code) props.settings.code = false
+  if (CS.value.code) CS.value.code = false
   else {
     props.affair.content = format(props.affair.content)
-    props.settings.code = true
+    CS.value.code = true
   }
 }
 

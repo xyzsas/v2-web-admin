@@ -6,6 +6,10 @@ export const SS = window.sessionStorage
 export const LS = window.localStorage
 export const PS = ref({}) // pieces
 export const AS = ref({}) // affairs
+export const CS = ref({ // configs
+  code: false // show affair code
+})
+
 export const token = () => ({ headers: { token: SS.token } })
 
 // computed

@@ -11,15 +11,18 @@
     <div class="tile is-parent is-vertical is-5">
       <div class="tile is-child box is-flex is-flex-direction-column" style="position: relative;">
         <span class="tag is-info is-light">编辑/预览</span>
-        <affair-workspace :affair="affair" :settings="settings"></affair-workspace>
+        <affair-workspace :affair="affair"></affair-workspace>
       </div>
     </div>
     <div class="tile is-parent is-vertical is-3">
       <div class="tile is-child box">
-        <affair-control :affair="affair" :settings="settings" :data="data"></affair-control>
+        <affair-control :affair="affair" :data="data"></affair-control>
       </div>
       <div class="tile is-child box">
         <affair-vars :affair="affair"></affair-vars>
+      </div>
+      <div class="tile is-child box">
+        <affair-pieces></affair-pieces>
       </div>
     </div>
   </div>
@@ -36,13 +39,13 @@ const router = useRouter(), route = useRoute()
 import AffairInfo from '../components/AffairInfo.vue'
 import AffairData from '../components/AffairData.vue'
 import AffairVars from '../components/AffairVars.vue'
+import AffairPieces from '../components/AffairPieces.vue'
 import AffairControl from '../components/AffairControl.vue'
 import AffairWorkspace from '../components/AffairWorkspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
 ref: affair = null
 ref: data = []
-ref: settings = { code: false }
 
 watch(() => AS.value[id], v => {
   if (!v) setTimeout(window.close, 2000)
@@ -64,6 +67,10 @@ async function getAffair () {
   for (const k in affair) {
     if (k[0] == '$') {
       affair.vars[k] = affair[k]
+      delete affair[k]
+    }
+    if (k[0] == '_') {
+      PS.value[k] = JSON.parse(affair[k])
       delete affair[k]
     }
   }

@@ -9,14 +9,14 @@
           <option value="">无预设</option>
           <option v-for="(v, p) in presets" :value="p">{{ p.replace('.js', '') }}</option>
         </select>
-        <loading v-if="loading">正在载入模板信息...</loading>
-        <template v-if="M">
-          <div class="p-1 mt-2 is-small" style="background-color: #eee; font-size: 0.7rem;">{{ M.info }}</div>
-          <label class="label mt-2">预设参数</label>
-          <textarea rows="20" class="yml" v-model="params"></textarea>
-          <button class="button is-primary mt-2" @click="apply">应用预设</button>
-        </template>
       </div>
+      <loading v-if="loading">正在载入模板信息...</loading>
+      <template v-if="M">
+        <div class="p-1 mt-2 is-small" style="background-color: #eee; font-size: 0.7rem;">{{ M.info }}</div>
+        <label class="label mt-2">预设参数</label>
+        <textarea rows="20" class="yml" v-model="params"></textarea>
+        <button class="button is-primary mt-2" @click="apply">应用预设</button>
+      </template>
     </template>
   </div>
 </template>
