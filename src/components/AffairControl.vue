@@ -65,6 +65,7 @@ async function submit () {
   if (props.affair.start) an.start = props.affair.start
   if (props.affair.end) an.end = props.affair.end
   if (props.affair.duration) an.duration = props.affair.duration
+  if (props.affair.target) an.target = props.affair.target
   if (props.affair.anonymous) an.anonymous = props.affair.anonymous
   if (props.affair.preset) an.preset = props.affair.preset
   if (props.affair.params) an.params = props.affair.params
