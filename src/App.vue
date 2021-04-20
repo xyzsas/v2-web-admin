@@ -2,6 +2,10 @@
   <router-view></router-view>
 </template>
 
+<script setup>
+window.localStorage['web-admin-version'] = import.meta.env.VITE_VERSION
+</script>
+
 <style>
 .yml {
   background-color: #eee;
