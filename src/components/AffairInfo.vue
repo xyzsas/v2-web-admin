@@ -17,11 +17,16 @@
     <input v-model="props.affair.end" class="input is-small" placeholder="无限制">
     <label class="label mt-2">允许时长（秒）：</label> 
     <input v-model="props.affair.duration" class="input is-small" placeholder="无限制">
+    <template v-if="LS.developer">
+      <label class="label mt-2" style="color: red;">提交目标：</label> 
+      <input v-model="props.affair.target" class="input is-small" placeholder="/service/">
+    </template>
   </template>
 </template>
 
 <script setup>
 import { defineProps } from 'vue'
+import { LS } from '../plugins/state.js'
 import GroupSelector from '../components/GroupSelector.vue'
 import Loading from '../components/Loading.vue'
 const props = defineProps(['affair'])
