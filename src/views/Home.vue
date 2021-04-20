@@ -33,6 +33,7 @@
       </div>
       <div class="panel-block buttons" style="margin: 0;">
         <button class="button is-info" @click="go('/msg')">发布消息</button>
+        <button class="button" @click="go('/photo', 700)">下载照片</button>
       </div>
       <div class="panel-block">备注：用户默认密码为<code>XYZSAS</code></div>
     </nav>

@@ -28,6 +28,10 @@ const routes = [
   {
     path: '/preset',
     component: () => import('./views/Preset.vue')
+  },
+  {
+    path: '/photo',
+    component: () => import('./views/Photo.vue')
   }
 ]
 
