@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 650px; max-width: 800px;">
+  <div class="p-4" style="min-width: 650px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">批量下载用户照片</h1>
     <label class="label mt-2">用户组：</label>
     <group-selector v-model="groups"></group-selector>
@@ -12,9 +12,9 @@
       </button>
     </div>
     <div style="width: 100%;">
-      <div v-for="p in photos" class="m-2 is-inline-block;">
-        <img :src="p[2]" alt="无照片" width="130" height="182" style="object-position: center;">
-        <p>{{ p[0] }}</p>
+      <div v-for="p in photos" class="m-2 is-inline-block" style="page-break-inside: avoid; min-width: 120px;">
+        <img :src="p[2]" alt="无照片" width="120" height="168" style="object-position: center; width: 120px;">
+        <p><code>{{ p[1] }}</code><br>{{ p[0] }}</p>
       </div>
     </div>
   </div>
@@ -35,17 +35,18 @@ ref: blobs = []
 
 async function getPhotos() {
   photos = {}
+  blobs = []
   try {
     for (const g of groups.split(',')) {
       const { data } = await axios.get('/store/photo/?group=' + g, token())
       for (const u in data.data) {
-        photos[u] = US.value[u] ? JSON.parse(JSON.stringify(US.value[u])): [u, g]
+        photos[u] = US.value[u] ? [...US.value[u]] : [u, '/无本地用户数据/']
         photos[u].push(getUrl(`photo/${u}`, data.data[u], data.template))
         await axios.get(photos[u][2], { responseType: 'blob' })
-         .then( res => {
-           blobs.push([res.data, photos[u][0]])
+         .then(res => {
+           blobs.push([res.data, photos[u][0], photos[u][1]])
          })
-         .catch (err => {})
+         .catch(err => {})
       }
     }
   } catch {
@@ -55,8 +56,8 @@ async function getPhotos() {
 
 async function batch() {
   loading.batch = true
-  displayGroups = groups
   await getPhotos()
+  displayGroups = groups
   loading.batch = false
 }
 
@@ -71,7 +72,7 @@ async function download() {
   }
   try {
     for (const b of blobs) {
-      zip.file(b[1] + '.png', b[0], { binary: true })
+      zip.file(b[2] + b[1] + '.png', b[0], { binary: true })
     }
     zip.generateAsync({ type: "blob" }).then(content => {
       FileSaver.saveAs(content, filename)
