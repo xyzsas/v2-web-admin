@@ -127,7 +127,10 @@ function code () {
 
 function preset () {
   window.updateAffair = a => {
-    for (const k in a) props.affair[k] = a[k]
+    for (const k in a) {
+      if (k == 'pieces') PS.value = a[k]
+      else props.affair[k] = a[k]
+    }
   }
   const win = window.open('./#/preset', '/preset', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=0,height=600,width=360')
   win.init = { affair: props.affair.id, preset: props.affair.preset, params: props.affair.params }
