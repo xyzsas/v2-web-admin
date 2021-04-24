@@ -23,7 +23,7 @@
 
 <script setup>
 import axios from '../plugins/axios.js'
-import { PS, token } from '../plugins/state.js'
+import { token } from '../plugins/state.js'
 import { getUrl } from '../plugins/convention.js'
 import Loading from '../components/Loading.vue'
 if (!window.init) window.close()

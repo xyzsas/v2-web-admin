@@ -4,8 +4,8 @@ export const userdata = ref({})
 
 export const SS = window.sessionStorage
 export const LS = window.localStorage
-export const PS = ref({}) // pieces
 export const AS = ref({}) // affairs
+export const A = ref(null) // affair
 export const CS = ref({ // configs
   code: false // show affair code
 })

@@ -2,24 +2,24 @@
   <div class="affair p-2 tile is-ancestor affair">
     <div class="tile is-parent is-vertical is-4">
       <div class="tile is-child box">
-        <affair-info :affair="affair"></affair-info>
+        <affair-info></affair-info>
       </div>
       <div class="tile is-child box">
-        <affair-data :affair="affair" :data="data"></affair-data>
+        <affair-data :data="data"></affair-data>
       </div>
     </div>
     <div class="tile is-parent is-vertical is-5">
       <div class="tile is-child box is-flex is-flex-direction-column" style="position: relative;">
         <span class="tag is-info is-light">编辑/预览</span>
-        <affair-workspace :affair="affair"></affair-workspace>
+        <affair-workspace></affair-workspace>
       </div>
     </div>
     <div class="tile is-parent is-vertical is-3">
       <div class="tile is-child box">
-        <affair-control :affair="affair" :data="data"></affair-control>
+        <affair-control :data="data"></affair-control>
       </div>
       <div class="tile is-child box">
-        <affair-vars :affair="affair"></affair-vars>
+        <affair-vars></affair-vars>
       </div>
       <div class="tile is-child box">
         <affair-pieces></affair-pieces>
@@ -31,7 +31,7 @@
 <script setup>
 import { watch } from 'vue'
 import axios from '../plugins/axios.js'
-import { AS, SS, PS, token } from '../plugins/state.js'
+import { AS, SS, A, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
@@ -44,7 +44,6 @@ import AffairControl from '../components/AffairControl.vue'
 import AffairWorkspace from '../components/AffairWorkspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
-ref: affair = null
 ref: data = []
 
 watch(() => AS.value[id], v => {
@@ -54,36 +53,35 @@ watch(() => AS.value[id], v => {
 const catchErr = async e => {
   console.log(e)
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
-  if (!affair) window.close()
+  if (!A.value) window.close()
 }
 
 async function getAffair () {
-  affair = null
-  PS.value = {}
-  affair = await axios.get('/affair/' + id, token())
+  A.value = await axios.get('/affair/' + id, token())
     .then(({ data }) => data)
     .catch(catchErr)
-  affair.vars = {}
-  for (const k in affair) {
+  A.value.vars = {}
+  A.value.pieces = {}
+  for (const k in A.value) {
     if (k[0] == '$') {
-      affair.vars[k] = affair[k]
-      delete affair[k]
+      A.value.vars[k] = A.value[k]
+      delete A.value[k]
     }
     if (k[0] == '_') {
-      PS.value[k] = JSON.parse(affair[k])
-      delete affair[k]
+      A.value.pieces[k] = JSON.parse(A.value[k])
+      delete A.value[k]
     }
   }
-  affair.vars = Object.keys(affair.vars).length ? jsyaml.dump(affair.vars) : ''
+  A.value.vars = Object.keys(A.value.vars).length ? jsyaml.dump(A.value.vars) : ''
   axios.get('/data/?affair=' + id, token())
     .then(res => { data = res.data })
     .catch(catchErr)
 }
 
+A.value = null
 if (route.params.id != 'NEW') getAffair()
 else {
-  PS.value = {}
-  affair = { id, groups: SS.group, vars: '', content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
+  A.value = { id, groups: SS.group, vars: '', pieces: {}, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
 }
 </script>
 

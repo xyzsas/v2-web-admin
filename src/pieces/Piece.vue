@@ -7,7 +7,7 @@
       <div class="is-flex is-align-items-center is-justify-content-space-between">
         <b class="m-0">组件 <code>{{ props.id }}</code></b>
         <div class="select is-small">
-          <select v-model="PS[id].T">
+          <select v-model="A.pieces[id].T">
             <option v-for="(v, k) in type" :value="k">{{ v }}</option>
           </select>
         </div>
@@ -19,12 +19,12 @@
 
 <script setup>
 import { defineProps } from 'vue'
-import { PS } from '../plugins/state.js'
+import { A } from '../plugins/state.js'
 import { type } from './index.js'
 import Loading from '../components/Loading.vue'
 const props = defineProps(['id'])
 ref: id = props.id && props.id[0] == '_' ? props.id : null
-if (id && !PS.value[id]) PS.value[id] = {}
+if (id && !A.value.pieces[id]) A.value.pieces[id] = {}
 </script>
 
 <style scoped>

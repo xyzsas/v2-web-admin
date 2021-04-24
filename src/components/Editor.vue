@@ -1,7 +1,7 @@
 <script>
 import { compile, ref } from 'vue'
 
-import { PS, LS } from '../plugins/state.js'
+import { LS, A } from '../plugins/state.js'
 import Piece from '../pieces/Piece.vue'
 import Mustache from '../pieces/Mustache.vue'
 
@@ -62,15 +62,15 @@ export default {
     function collect () {
       const html = content.value
       // check exist
-      for (const p in PS.value) {
+      for (const p in A.value.pieces) {
         const regex = new RegExp(`<${p}(\\s.*?)?>`)
-        if (!html.match(regex)) delete PS.value[p]
+        if (!html.match(regex)) delete A.value.pieces[p]
       }
       // find all model="_piece"
       const raw = html.match(/model="data\._(.*?)"/g) || []
       for (const rp of raw) {
         const id = rp.substr(12, rp.length - 13)
-        PS.value[id] = { T: 'simple' }
+        A.value.pieces[id] = { T: 'simple' }
       }
     }
     collect()
