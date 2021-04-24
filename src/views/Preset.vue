@@ -59,7 +59,7 @@ async function select () {
   }
   loading = true
   try {
-    M = await import(getUrl('preset' + preset, presets[preset], template))
+    M = await import(/* @vite-ignore */getUrl('preset' + preset, presets[preset], template))
     console.log(M)
     if (window.init.params) delete window.init.params
     else params = jsyaml.dump(M.params)
