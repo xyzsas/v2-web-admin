@@ -6,7 +6,7 @@ export const SS = window.sessionStorage
 export const LS = window.localStorage
 export const AS = ref({}) // affairs
 export const A = ref(null) // affair
-export const U = JSON.parse(SS.user)
+export const U = JSON.parse(SS.user || 'null')
 export const CS = ref({ // configs
   code: false // show affair code
 })
