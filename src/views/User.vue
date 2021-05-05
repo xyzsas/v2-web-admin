@@ -24,12 +24,8 @@
       <img src="/img/logo.svg" class="qrlogo">
     </div>
     <div class="buttons" v-if="route.params.id != 'NEW'">
-      <button class="button is-small is-link" :class="{ 'is-loading': photoloading }" v-if="!photourl" @click="getPhoto">载入用户照片</button>
+      <button class="button is-small is-warning" v-if="user && user.role != 'ADMIN'" @click="possesion" :class="{ 'is-loading': possesionloading }">以此用户身份登录</button>
       <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
-    </div>
-    <div v-if="photourl">
-      <h2 class="title is-5 mt-6">用户照片</h2>
-      <img :src="photourl" alt="无照片" style="width: 200px;">
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
@@ -46,7 +42,7 @@
 import { computed, watch } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
-import { SS, US, userdata, token } from '../plugins/state.js'
+import { U, US, userdata, token } from '../plugins/state.js'
 import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
 
@@ -57,8 +53,7 @@ ref: username = ''
 ref: loading = false
 ref: msgs = null
 ref: msgloading = false
-ref: photourl = null
-ref: photoloading = false
+ref: possesionloading = false
 
 const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
 watch(US, v => {
@@ -72,12 +67,13 @@ const title = computed(() => route.params.id == 'NEW'
   : user ? user.name : '正在载入...'
 )
 
-if (!SS.token || SS.role != 'ADMIN') window.close()
+if (!U || U.role != 'ADMIN') window.close()
 
 const catchErr = async e => {
   console.log(e)
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
-  window.close()
+  if (!user) window.close()
+  return false
 }
 
 function getUser () {
@@ -86,19 +82,12 @@ function getUser () {
     .catch(catchErr)
 }
 
-function getPhoto() {
-  photoloading = true
-  axios.get('/store/' + id.value, token())
-    .then(({ data }) => { photourl = data.photo })
-    .catch(catchErr)
-}
-
 if (route.params.id != 'NEW') getUser()
 else user = {}
 
 async function submit () {
   if (!id.value) return
-  if (user.group.indexOf(SS.group) != 0 || user.group[user.group.length-1] != '/') {
+  if (user.group.indexOf(U.group) != 0 || user.group[user.group.length-1] != '/') {
     Swal.fire('用户组错误', '开头和结尾必须是<code>/</code><br>且在管理员权限内', 'error')
     return
   }
@@ -140,6 +129,17 @@ async function getMsg() {
     })
     .catch(catchErr)
   msgloading = false
+}
+
+async function possesion () {
+  if (!user) return
+  possesionloading = true
+  const res = await axios.put('/user/' + user.id, {}, token())
+    .then(({ data }) => data)
+    .catch(catchErr)
+  possesionloading = false
+  if (!res) return
+  window.open(`/#/?user=${encodeURIComponent(JSON.stringify(res.user))}&token=${res.token}`, '/possesion/' + user.id, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
 }
 </script>
 

@@ -31,7 +31,7 @@
 <script setup>
 import { watch } from 'vue'
 import axios from '../plugins/axios.js'
-import { AS, SS, A, token } from '../plugins/state.js'
+import { AS, U, A, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
@@ -81,7 +81,7 @@ async function getAffair () {
 A.value = null
 if (route.params.id != 'NEW') getAffair()
 else {
-  A.value = { id, groups: SS.group, vars: '', pieces: {}, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
+  A.value = { id, groups: U.group, vars: '', pieces: {}, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
 }
 </script>
 

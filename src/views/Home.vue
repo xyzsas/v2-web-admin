@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h1 class="title is-spaced">您好，管理员{{ SS.name }}</h1>
-    <p class="subtitle is-6">用户组：<code>{{ SS.group }}</code></p>
+    <h1 class="title is-spaced">您好，管理员{{ U.name }}</h1>
+    <p class="subtitle is-6">用户组：<code>{{ U.group }}</code></p>
     <nav class="panel">
       <p class="panel-heading">
         <span class="icon is-left">
@@ -27,7 +27,7 @@
         {{ loading || '用户管理' }}
       </p>
       <div class="panel-block buttons" style="margin: 0;">
-        <button class="button" @click="go('/group/' + encodeURIComponent(SS.group))">用户组</button>
+        <button class="button" @click="go('/group/' + encodeURIComponent(U.group))">用户组</button>
         <button class="button" @click="go('/user/NEW')">添加用户</button>
         <button class="button" @click="go('/batch', 700)">批量操作</button>
       </div>
@@ -58,7 +58,7 @@
 import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
-import { GS, AS, US, SS, LS, userdata, token } from '../plugins/state.js'
+import { GS, AS, US, LS, U, userdata, token } from '../plugins/state.js'
 import Item from '../components/Item.vue'
 
 ref: query = ''
@@ -84,10 +84,10 @@ const go = (r, w = 360) => {
 
 ref: loading = ''
 async function init () {
-  if (!SS.token) {
+  if (!U) {
     window.location.href = '/#/login?c=/admin/'
     return
-  } else if (SS.role != 'ADMIN') {
+  } else if (U.role != 'ADMIN') {
     window.location.href = '/#/'
     return
   }

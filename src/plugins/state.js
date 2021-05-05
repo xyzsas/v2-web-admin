@@ -6,6 +6,7 @@ export const SS = window.sessionStorage
 export const LS = window.localStorage
 export const AS = ref({}) // affairs
 export const A = ref(null) // affair
+export const U = JSON.parse(SS.user)
 export const CS = ref({ // configs
   code: false // show affair code
 })
@@ -23,11 +24,11 @@ export const US = computed(() => { // users
   return res
 })
 export const GS = computed(() => { // groups
-  if (!SS.group) return {}
-  const res = { [SS.group]: 1 }
+  if (!U.group) return {}
+  const res = { [U.group]: 1 }
   for (const g in userdata.value) {
     if (!Object.keys(userdata.value[g]).length) continue
-    for (let i = SS.group.length; i < g.length; i++) {
+    for (let i = U.group.length; i < g.length; i++) {
       if (g[i] == '/') res[g.substr(0, i + 1)] = 1
     }
   }

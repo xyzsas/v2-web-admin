@@ -23,11 +23,11 @@
 import JSZip from "jszip"
 import FileSaver from "file-saver"
 import axios from '../plugins/axios.js'
-import { SS, GS, US, token } from '../plugins/state.js'
+import { U, GS, US, token } from '../plugins/state.js'
 import { getUrl } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
 
-ref: groups = SS.group
+ref: groups = U.group
 ref: photos = {}
 ref: loading = { batch: false, download: false }
 ref: displayGroups = ''
