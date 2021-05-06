@@ -4,9 +4,6 @@
       <div class="tile is-child box">
         <affair-info></affair-info>
       </div>
-      <div class="tile is-child box">
-        <affair-data :data="data"></affair-data>
-      </div>
     </div>
     <div class="tile is-parent is-vertical is-5">
       <div class="tile is-child box is-flex is-flex-direction-column" style="position: relative;">
@@ -16,7 +13,7 @@
     </div>
     <div class="tile is-parent is-vertical is-3">
       <div class="tile is-child box">
-        <affair-control :data="data"></affair-control>
+        <affair-control></affair-control>
       </div>
       <div class="tile is-child box">
         <affair-vars></affair-vars>
@@ -37,14 +34,12 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 // components
 import AffairInfo from '../components/AffairInfo.vue'
-import AffairData from '../components/AffairData.vue'
 import AffairVars from '../components/AffairVars.vue'
 import AffairPieces from '../components/AffairPieces.vue'
 import AffairControl from '../components/AffairControl.vue'
 import AffairWorkspace from '../components/AffairWorkspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
-ref: data = []
 
 watch(() => AS.value[id], v => {
   if (!v) setTimeout(window.close, 2000)
@@ -73,9 +68,6 @@ async function getAffair () {
     }
   }
   A.value.vars = Object.keys(A.value.vars).length ? jsyaml.dump(A.value.vars) : ''
-  axios.get('/data/?affair=' + id, token())
-    .then(res => { data = res.data })
-    .catch(catchErr)
 }
 
 A.value = null

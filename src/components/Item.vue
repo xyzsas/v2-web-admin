@@ -24,8 +24,7 @@ const props = defineProps(['type', 'id'])
 const icon = computed(() => ({
   user: 'mdi-account',
   group: 'mdi-account-group',
-  affair: 'mdi-package-variant-closed',
-  data: 'mdi-database'
+  affair: 'mdi-package-variant-closed'
 }[props.type]))
 
 const go = () => {

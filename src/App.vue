@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-window.localStorage['web-admin-version'] = import.meta.env.VITE_VERSION.substr(0, 7)
+window.localStorage['web-admin-version'] = (import.meta.env.VITE_VERSION || 'develop').substr(0, 7)
 console.log('web-admin-version: ' + import.meta.env.VITE_VERSION)
 </script>
 

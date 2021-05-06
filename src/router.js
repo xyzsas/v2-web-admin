@@ -18,6 +18,10 @@ const routes = [
     component: () => import('./views/Affair.vue')
   },
   {
+    path: '/data/:id',
+    component: () => import('./views/Data.vue')
+  },
+  {
     path: '/batch',
     component: () => import('./views/Batch.vue')
   },

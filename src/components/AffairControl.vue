@@ -3,14 +3,19 @@
   <loading v-if="!A">正在载入... </loading>
   <template v-else>
     <div class="field has-addons is-justify-content-center">
-      <button class="button is-fullwidth is-primary" @click="submit" :class="{ 'is-loading': loading }">提交事务</button>
+      <p class="control" style="flex-grow: 1;">
+        <button class="button is-primary is-small is-fullwidth" @click="submit" :class="{ 'is-loading': loading }">提交事务</button>
+      </p>
+      <p class="control" style="flex-grow: 1;">
+        <button class="button is-danger is-small is-fullwidth" @click="remove" :class="{ 'is-loading': loading }">删除事务</button>
+      </p>
     </div>
     <div class="field has-addons is-justify-content-center">
       <p class="control" style="flex-grow: 1;">
         <button class="button is-info is-small is-fullwidth" @click="msg">发布消息</button>
       </p>
       <p class="control" style="flex-grow: 1;">
-        <button class="button is-danger is-small is-fullwidth" @click="remove" :class="{ 'is-loading': loading }">删除事务</button>
+        <button class="button is-link is-small is-fullwidth" @click="data">管理数据</button>
       </p>
     </div>
     <hr class="mt-0 mb-2">
@@ -34,12 +39,11 @@
 </template>
 
 <script setup>
-import { defineProps, nextTick } from 'vue'
+import { nextTick } from 'vue'
 import axios from '../plugins/axios.js'
 import { AS, CS, A, token } from '../plugins/state.js'
 import format from '../plugins/format.js'
 import Loading from '../components/Loading.vue'
-const props = defineProps(['data'])
 ref: loading = false
 
 const catchErr = async e => {
@@ -82,7 +86,7 @@ async function submit () {
 }
 
 async function remove () {
-  if (!props.data || !A.value) return
+  if (!A.value) return
   const res = await Swal.fire({
     title: '危险操作',
     html: `删除事务${A.value.title}?<br>事务数据也会被删除`,
@@ -95,9 +99,6 @@ async function remove () {
   if (!res.isConfirmed) return
   loading = true
   try {
-    for (const d of props.data) {
-      await axios.delete('/data/' + d, token())
-    }
     await axios.delete('/affair/' + A.value.id, token())
     delete AS.value[A.value.id]
     Swal.fire('删除事务成功', '', 'success')
@@ -117,6 +118,10 @@ function msg () {
   window.open(`./#/msg?id=${A.value.id}&title=${A.value.title}&link=${encodeURIComponent('/#/@/' + A.value.id)}&duration=${duration}&groups=${A.value.groups}`, '/msg', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
 }
 
+function data () {
+  window.open('./#/data/' + A.value.id, '/data/' + A.value.id, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
+}
+
 function code () {
   if (CS.value.code) CS.value.code = false
   else {
@@ -129,7 +134,7 @@ function preset () {
   window.updateAffair = a => {
     for (const k in a) A.value[k] = a[k]
   }
-  const win = window.open('./#/preset', '/preset', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=0,left=0,height=600,width=360')
+  const win = window.open('./#/preset', '/preset', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=100000,left=0,height=600,width=360')
   win.init = { affair: A.value.id, preset: A.value.preset, params: A.value.params }
 }
 </script>
