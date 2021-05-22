@@ -25,7 +25,7 @@
 </template>
 
 <script setup>
-import { LS, A } from '../plugins/state.js'
-import GroupSelector from '../components/GroupSelector.vue'
-import Loading from '../components/Loading.vue'
+import { LS, A } from '../../plugins/state.js'
+import GroupSelector from '../../components/GroupSelector.vue'
+import Loading from '../../components/Loading.vue'
 </script>

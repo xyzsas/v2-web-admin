@@ -8,6 +8,6 @@
 </template>
 
 <script setup>
-import { A } from '../plugins/state.js'
-import Loading from '../components/Loading.vue'
+import { A } from '../../plugins/state.js'
+import Loading from '../../components/Loading.vue'
 </script>

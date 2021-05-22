@@ -10,9 +10,9 @@
 
 <script setup>
 import { computed } from 'vue'
-import { md5 } from '../plugins/convention.js'
-import { CS, A } from '../plugins/state.js'
-import Loading from '../components/Loading.vue'
-import Editor from '../components/Editor.vue'
+import { md5 } from '../../plugins/convention.js'
+import { CS, A } from '../../plugins/state.js'
+import Loading from '../../components/Loading.vue'
+import Editor from '../../components/Editor.vue'
 const key = computed(() => md5(A.value.content))
 </script>

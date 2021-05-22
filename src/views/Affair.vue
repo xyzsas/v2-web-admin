@@ -33,11 +33,11 @@ import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 // components
-import AffairInfo from '../components/AffairInfo.vue'
-import AffairVars from '../components/AffairVars.vue'
-import AffairPieces from '../components/AffairPieces.vue'
-import AffairControl from '../components/AffairControl.vue'
-import AffairWorkspace from '../components/AffairWorkspace.vue'
+import AffairInfo from '../components/affair/AffairInfo.vue'
+import AffairVars from '../components/affair/AffairVars.vue'
+import AffairPieces from '../components/affair/AffairPieces.vue'
+import AffairControl from '../components/affair/AffairControl.vue'
+import AffairWorkspace from '../components/affair/AffairWorkspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
 

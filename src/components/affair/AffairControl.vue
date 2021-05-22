@@ -40,10 +40,10 @@
 
 <script setup>
 import { nextTick } from 'vue'
-import axios from '../plugins/axios.js'
-import { AS, CS, A, token } from '../plugins/state.js'
-import format from '../plugins/format.js'
-import Loading from '../components/Loading.vue'
+import axios from '../../plugins/axios.js'
+import { AS, CS, A, token } from '../../plugins/state.js'
+import format from '../../plugins/format.js'
+import Loading from '../../components/Loading.vue'
 ref: loading = false
 
 const catchErr = async e => {

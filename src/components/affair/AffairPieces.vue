@@ -8,8 +8,8 @@
 </template>
 
 <script setup>
-import Loading from '../components/Loading.vue'
-import { A } from '../plugins/state.js'
-import { type } from '../pieces/index.js'
+import Loading from '../../components/Loading.vue'
+import { A } from '../../plugins/state.js'
+import { type } from '../../pieces/index.js'
 const name = T => (T == 'simple' ? '简单组件' : type[T] || '未定义')
 </script>
