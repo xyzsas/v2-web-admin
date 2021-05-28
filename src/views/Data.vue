@@ -70,7 +70,11 @@ function view () {
   router.push('/dataexport/' + ids.join('.'))
 }
 
-
+function edit () {
+  for (let i = 0; i < chosen.length; i++) {
+    if (chosen[i]) router.push('/dataupdate/' + data[i])
+  }
+}
 </script>
 
 <style scoped>

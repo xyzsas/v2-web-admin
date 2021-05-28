@@ -5,13 +5,12 @@
     <loading v-if="!data">正在载入...</loading>
     <div class="list is-fullwidth mt-3" v-else>
       <p v-if="!dataids.length">暂无数据</p>
-      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;">{{ data }}</textarea>
+      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;" readonly>{{ data }}</textarea>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import axios from '../plugins/axios.js'
 import { token } from '../plugins/state.js'
@@ -42,9 +41,9 @@ function copy () {
     const el = document.querySelector('#d-copy')
     el.select()
     document.execCommand('copy')
-    swal.fire('复制成功', '', 'success')
+    Swal.fire('复制成功', '', 'success')
   } catch {
-    swal.fire('错误', '复制内容失败！', 'error')
+    Swal.fire('错误', '复制内容失败！', 'error')
   }
 }
 
