@@ -8,7 +8,7 @@ console.log('web-admin-version: ' + import.meta.env.VITE_VERSION)
 </script>
 
 <style>
-.yml {
+.code {
   background-color: #eee;
   font-family: monospace;
   font-weight: bold;
@@ -18,7 +18,7 @@ console.log('web-admin-version: ' + import.meta.env.VITE_VERSION)
   width: 100%;
   font-size: 0.75rem;
 }
-.yml::placeholder {
+.code::placeholder {
   color: #aaa;
 }
 </style>

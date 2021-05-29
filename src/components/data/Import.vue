@@ -1,5 +1,5 @@
 <template>
-  <div style="min-width: 650px; max-width: 800px;">
+  <div class="is-fullwidth">
     <h1 class="title is-4" style="margin-bottom: 5px;">添加事务数据</h1>
     <input class="input is-small" type="text" v-model="name" placeholder="数据名称，请输入英文">
     <textarea class="textarea has-fixed-size is-small mt-3 mb-3" rows="3" v-model="input" placeholder="从Excel中复制的事务信息，包括表头" :disabled="loading"></textarea>

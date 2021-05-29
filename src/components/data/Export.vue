@@ -1,24 +1,20 @@
 <template>
-  <div class="p-4">
-    <h1 class="title is-4 mb-0">数据详情</h1>
+  <div style="width: 100%;">
     <button class="button is-primary is-small mt-3" @click="copy">复制</button>
     <loading v-if="!data">正在载入...</loading>
     <div class="list is-fullwidth mt-3" v-else>
-      <p v-if="!dataids.length">暂无数据</p>
-      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;">{{ data }}</textarea>
+      <p v-if="!props.ids.length">暂无数据</p>
+      <textarea id="d-copy" class="code" style="overflow-y: scroll; height: 60vh;">{{ data }}</textarea>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import axios from '../plugins/axios.js'
-import { token } from '../plugins/state.js'
-import Loading from '../components/Loading.vue'
-const route = useRoute()
-const dataids = route.params.id.split('.')
-
+import { computed, defineProps } from 'vue'
+import axios from '../../plugins/axios.js'
+import { token } from '../../plugins/state.js'
+import Loading from '../../components/Loading.vue'
+const props = defineProps(['ids'])
 ref: data = ''
 
 const catchErr = async e => {
@@ -26,7 +22,9 @@ const catchErr = async e => {
   if (!data) window.close()
 }
 
-for (const d of dataids) {
+console.log(props.ids)
+
+for (const d of props.ids) {
   axios.get('/data/' + d, token())
   .then(res => { 
     data += 'id\t' + Object.keys(JSON.parse(res.data[Object.keys(res.data)[0]])).join('\t') + '\n'

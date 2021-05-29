@@ -139,7 +139,7 @@ async function possesion () {
     .catch(catchErr)
   possesionloading = false
   if (!res) return
-  window.open(`/#/?user=${encodeURIComponent(JSON.stringify(res.user))}&token=${res.token}`, '/possesion/' + user.id, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
+  window.open(`${window.location.origin}/#/?user=${encodeURIComponent(JSON.stringify(res.user))}&token=${res.token}`, '/possesion/' + user.id, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
 }
 </script>
 

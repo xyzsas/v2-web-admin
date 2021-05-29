@@ -22,10 +22,6 @@ const routes = [
     component: () => import('./views/Data.vue')
   },
   {
-    path: '/dataexport/:id',
-    component: () => import('./views/DataExport.vue')
-  },
-  {
     path: '/batch',
     component: () => import('./views/Batch.vue')
   },
