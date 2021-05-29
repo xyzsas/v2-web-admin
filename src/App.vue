@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <bar @home="home"/>
     <component style="box-shadow: 4px 0px 4px #eee;" v-for="(w, i) in win" @mouseenter="focus = i" :is="w.c" :p="w.p">视图不存在</component>
   </div>
 </template>
@@ -7,6 +8,7 @@
 <script setup>
 import { defineAsyncComponent, markRaw } from 'vue'
 import Loading from './components/Loading.vue'
+import Bar from './components/Bar.vue'
 
 ref: win = []
 ref: I = 0
@@ -56,6 +58,7 @@ window.show = (view, params = {}) => {
 }
 
 window.show('home')
+const home = () => { I = -1; window.show('home') }
 </script>
 
 <style scoped>

@@ -1,7 +1,5 @@
 <template>
   <div class="container">
-    <h1 class="title is-spaced">您好，管理员{{ U.name }}</h1>
-    <p class="subtitle is-6">用户组：<code>{{ U.group }}</code></p>
     <nav class="panel">
       <p class="panel-heading">
         <span class="icon is-left">
