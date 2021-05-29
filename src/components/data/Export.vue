@@ -40,9 +40,9 @@ function copy () {
     const el = document.querySelector('#d-copy')
     el.select()
     document.execCommand('copy')
-    swal.fire('复制成功', '', 'success')
+    Swal.fire('复制成功', '', 'success')
   } catch {
-    swal.fire('错误', '复制内容失败！', 'error')
+    Swal.fire('错误', '复制内容失败！', 'error')
   }
 }
 

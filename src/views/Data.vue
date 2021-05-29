@@ -58,7 +58,6 @@ function selectAll () {
   chosen = []
   if (!all) for (const d of data) chosen.push(d)
 }
-
 </script>
 
 <style scoped>
