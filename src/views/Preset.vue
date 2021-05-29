@@ -14,7 +14,7 @@
       <template v-if="M">
         <div class="p-1 mt-2 is-small" style="background-color: #eee; font-size: 0.7rem;">{{ M.info }}</div>
         <label class="label mt-2">预设参数</label>
-        <textarea rows="20" class="yml" v-model="params"></textarea>
+        <textarea rows="20" class="code" v-model="params"></textarea>
         <button class="button is-primary mt-2" @click="apply">应用预设</button>
       </template>
     </template>

@@ -1,7 +1,7 @@
 <template>
   <div class="affair p-2 tile is-ancestor affair">
     <div class="tile is-parent is-vertical is-4">
-      <div class="tile is-child box">
+      <div class="tile is-child">
         <affair-info></affair-info>
       </div>
     </div>
@@ -12,13 +12,13 @@
       </div>
     </div>
     <div class="tile is-parent is-vertical is-3">
-      <div class="tile is-child box">
+      <div class="tile is-child">
         <affair-control></affair-control>
       </div>
-      <div class="tile is-child box">
+      <div class="tile is-child">
         <affair-vars></affair-vars>
       </div>
-      <div class="tile is-child box">
+      <div class="tile is-child">
         <affair-pieces></affair-pieces>
       </div>
     </div>
@@ -33,11 +33,11 @@ import { md5 } from '../plugins/convention.js'
 import { useRouter, useRoute } from 'vue-router'
 const router = useRouter(), route = useRoute()
 // components
-import AffairInfo from '../components/AffairInfo.vue'
-import AffairVars from '../components/AffairVars.vue'
-import AffairPieces from '../components/AffairPieces.vue'
-import AffairControl from '../components/AffairControl.vue'
-import AffairWorkspace from '../components/AffairWorkspace.vue'
+import AffairInfo from '../components/affair/Info.vue'
+import AffairVars from '../components/affair/Vars.vue'
+import AffairPieces from '../components/affair/Pieces.vue'
+import AffairControl from '../components/affair/Control.vue'
+import AffairWorkspace from '../components/affair/Workspace.vue'
 
 ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
 
@@ -79,7 +79,6 @@ else {
 
 <style scoped>
 div.affair {
-  background-color: #eee;
   min-height: 100vh;
   margin: 0;
   width: 100%;
