@@ -1,13 +1,22 @@
 <template>
-  <component :is="c" :p="p">视图不存在</component>
+  <div class="app">
+    <component style="box-shadow: 4px 0px 4px #eee;" v-for="(w, i) in win" @mouseenter="focus = i" :is="w.c" :p="w.p">视图不存在</component>
+  </div>
 </template>
 
 <script setup>
-import { defineAsyncComponent, shallowRef } from 'vue'
+import { defineAsyncComponent, markRaw } from 'vue'
 import Loading from './components/Loading.vue'
 
-const N = Math.floor(window.innerWidth / 400) || 1
 ref: win = []
+ref: I = 0
+ref: focus = -1
+let N = Math.floor(window.innerWidth / 360) || 1
+window.onresize = () => {
+  N = Math.floor(window.innerWidth / 360) || 1
+  while (win.length > N) win.pop()
+  I %= N
+}
 
 const views = {
   'affair': () => import('./views/Affair.vue'),
@@ -20,15 +29,41 @@ const views = {
   'preset': () => import('./views/Preset.vue'),
   'user': () => import('./views/User.vue')
 }
-const load = (w) => views[w] ? defineAsyncComponent(views[w]) : Loading
+const load = (w) => markRaw(views[w] ? defineAsyncComponent(views[w]) : Loading)
+const next = () => { I++; I %= N }
 
-const c = shallowRef(load('home'))
-ref: p = undefined
-window.show = (view, params) => {
-  c.value = load(view)
-  p = params
+window.show = (view, params = {}) => {
+  const w = { c: load(view), p: params }
+  if (I == -1) {
+    win = [w]
+    I = 0
+    return
+  }
+  if (view == 'affair' || view == 'data') {
+    win = [w]
+    I = -1
+    return
+  }
+  if (view == 'home') {
+    win.unshift(w)
+    if (win.length > N) win.pop()
+    next()
+    return
+  }
+  if (I == focus && N > 1) next()
+  win[I] = w
+  next()
 }
+
+window.show('home')
 </script>
+
+<style scoped>
+div.app {
+  display: flex;
+  min-height: 100vh;
+}
+</style>
 
 <style>
 .code {

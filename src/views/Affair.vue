@@ -79,8 +79,8 @@ else {
 <style scoped>
 div.affair {
   min-height: 100vh;
+  min-width: 720px;
   margin: 0;
-  width: 100%;
 }
 span.tag {
   position: absolute;

@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="max-width: 400px;">
+  <div class="p-4" style="min-width: 360px; flex-grow: 1;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
     <div class="box" v-if="user">
