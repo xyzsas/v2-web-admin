@@ -9,8 +9,7 @@
       </p>
     </div>
     <div class="space">&nbsp;</div>
-    <button v-if="props.type == 'user' && !set" class="button is-small is-warning" :class="{ 'is-loading': loading }" @click.stop="reset">重置密码</button>
-    <code class="advanced" v-if="props.type == 'user' || props.type == 'affair'">{{ props.id }}</code>
+    <button v-if="type == 'user' && !set" class="button is-small is-warning" :class="{ 'is-loading': loading }" @click.stop="reset">重置密码</button>
   </div>
 </template>
 
@@ -20,25 +19,23 @@ import { defineProps, computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { token } from '../plugins/state.js'
 
-const props = defineProps(['type', 'id'])
+const { type, id } = defineProps(['type', 'id'])
+
 const icon = computed(() => ({
   user: 'mdi-account',
   group: 'mdi-account-group',
   affair: 'mdi-package-variant-closed'
-}[props.type]))
+}[type]))
 
-const go = () => {
-  const r = `/${props.type}/${encodeURIComponent(props.id)}`
-  const w = props.type == 'affair' ? 1000 : 360
-  const left = window.screenLeft > w + 40 ? window.screenLeft - w - 20 : 10000
-  window.open('./#' + r, r, `toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,width=${w},height=600,top=10000,left=${left}`)
+function go () {
+  window.show(type, { id })
 }
 
 ref: loading = false
 ref: set = false
 async function reset () {
   loading = true
-  await axios.post('/user/', { [props.id]: { password: 1 } }, token())
+  await axios.post('/user/', { [id]: { password: 1 } }, token())
     .then(() => {
       Swal.fire('重置密码成功', '初始密码为XYZSAS', 'success')
       set = true
@@ -64,10 +61,5 @@ div.space {
 code {
   margin: 4px;
   cursor: auto;
-}
-@media (max-width: 400px) {
-  .advanced {
-    display: none;
-  }
 }
 </style>

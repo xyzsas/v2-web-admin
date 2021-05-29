@@ -33,13 +33,12 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, defineProps } from 'vue'
 import { GS, userdata, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
-import { useRoute } from 'vue-router'
 import Item from '../components/Item.vue'
-const route = useRoute()
-const root = route.params.id
+const { p } = defineProps(['p'])
+const root = p.id
 const rootLevel = (root.match(/\//g) || []).length
 
 watch(() => GS.value[root], v => {

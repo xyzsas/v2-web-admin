@@ -30,22 +30,21 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import { US, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
-import { useRoute } from 'vue-router'
-const route = useRoute()
-const q = route.query
+const { p } = defineProps(['p'])
 
 ref: byUser = false
 ref: loading = false
-ref: id = q.id || md5(Math.random().toString())
-ref: groups = q.groups || ''
-ref: title = q.title || ''
-ref: subtitle = q.subtitle || ''
-ref: link = q.link || ''
-ref: duration = q.duration || ''
+ref: id = p.id || md5(Math.random().toString())
+ref: groups = p.groups || ''
+ref: title = p.title || ''
+ref: subtitle = p.subtitle || ''
+ref: link = p.link || ''
+ref: duration = p.duration || ''
 ref: input = ''
 
 async function submit () {

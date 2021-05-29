@@ -26,12 +26,10 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { watch, defineProps } from 'vue'
 import axios from '../plugins/axios.js'
 import { AS, U, A, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter(), route = useRoute()
 // components
 import AffairInfo from '../components/affair/Info.vue'
 import AffairVars from '../components/affair/Vars.vue'
@@ -39,7 +37,8 @@ import AffairPieces from '../components/affair/Pieces.vue'
 import AffairControl from '../components/affair/Control.vue'
 import AffairWorkspace from '../components/affair/Workspace.vue'
 
-ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
+const { p } = defineProps(['p'])
+ref: id = p.id == 'NEW' ? md5(Math.random().toString()) : p.id
 
 watch(() => AS.value[id], v => {
   if (!v) setTimeout(window.close, 2000)
@@ -71,7 +70,7 @@ async function getAffair () {
 }
 
 A.value = null
-if (route.params.id != 'NEW') getAffair()
+if (p.id != 'NEW') getAffair()
 else {
   A.value = { id, groups: U.group, vars: '', pieces: {}, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
 }
