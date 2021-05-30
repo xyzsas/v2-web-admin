@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="max-width: 500px;">
+  <div style="max-width: 500px;">
     <h1 class="title is-4">预设模板</h1>
     <p class="subtitle is-6">事务：<code>{{ affair }}</code></p>
     <loading v-if="!Object.keys(presets).length">正在载入... </loading>

@@ -110,7 +110,7 @@ init()
 
 <style scoped>
 div.home {
-  padding: 3%;
+  padding: 2%;
   width:  100%;
   min-width: 320px;
 }

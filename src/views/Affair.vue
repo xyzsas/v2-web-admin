@@ -1,5 +1,5 @@
 <template>
-  <div class="affair p-2 tile is-ancestor affair">
+  <div class="affair tile is-ancestor affair">
     <div class="tile is-parent is-vertical is-4">
       <div class="tile is-child">
         <affair-info></affair-info>

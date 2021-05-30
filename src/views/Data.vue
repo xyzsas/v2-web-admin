@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div>
     <h1 class="title is-4 mb-0">事务数据</h1>
     <code class="is-inline-block m-1" style="font-size: 0.8rem;">{{ p.id }}</code>
     <button class="button is-primary is-small ml-3" @click="show = 'import'">添加数据</button>

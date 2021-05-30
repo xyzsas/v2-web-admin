@@ -1,7 +1,7 @@
 <template>
-  <div class="p-4" style="max-width: 500px;">
-    <h1 class="title is-4">消息 - 发布</h1>
-    <div class="box">
+  <div>
+    <h1 class="title is-4 mb-2">消息 - 发布</h1>
+    <div class="box p-2">
       <template v-if="!byUser">
         <label class="label">选择用户组</label>
         <group-selector v-model="groups"></group-selector>

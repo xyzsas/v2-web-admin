@@ -1,12 +1,12 @@
 <template>
   <bar/>
   <div class="app">
-    <div v-for="(w, i) in win" class="win" style="box-shadow: 4px 0px 4px #eee;" :key="w.k">
-      <div class="buttons mb-0 is-right pb-0 pt-2">
-        <button class="button is-white is-small" @click="w.pin = !w.pin">
-          <span class="icon"><i class="mdi mdi-24px" :class="{ 'mdi-pin-outline': !w.pin, 'mdi-pin-off-outline': w.pin }" /></span>
+    <div v-for="(w, i) in win" class="win p-4" :key="w.k">
+      <div class="buttons is-right p-0 m-0" style="opacity: 0.6;">
+        <button class="button is-white is-small m-0" @click="w.pin = !w.pin">
+          <span class="icon"><i class="mdi mdi-24px" :class="{ 'mdi-pin-outline': !w.pin, 'mdi-pin': w.pin }" /></span>
         </button>
-        <button class="button is-white is-small" @click="win.length > 1 && win.splice(i, 1)">
+        <button class="button is-white is-small m-0" @click="close(i)">
           <span class="icon"><i class="mdi mdi-24px mdi-close" /></span>
         </button>
       </div>
@@ -67,6 +67,10 @@ function remove (req) {
   }
 }
 
+function close (i) {
+  window.close(i)
+  if (!win.length) window.show('home')
+}
 window.close = (i) => win.splice(i, 1)
 
 window.show = (view, params = {}) => setTimeout(() => {
@@ -92,6 +96,8 @@ div.win {
   overflow-y: auto;
   flex-grow: 1;
   min-height: 100%;
+  box-shadow: 4px 0px 4px #eee;
+  position: relative;
 }
 </style>
 

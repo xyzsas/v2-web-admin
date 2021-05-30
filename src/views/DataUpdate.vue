@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4">
+  <div>
     <h1 class="title is-4 mb-0">数据详情</h1>
     <button class="button is-primary is-small mt-3" @click="update" :class="{ 'is-loading': loading }">更新</button>
     <p v-if="error" class="tag is-danger is-light">{{ error }}</p>
