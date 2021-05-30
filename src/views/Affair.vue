@@ -37,11 +37,11 @@ import AffairPieces from '../components/affair/Pieces.vue'
 import AffairControl from '../components/affair/Control.vue'
 import AffairWorkspace from '../components/affair/Workspace.vue'
 
-const { p } = defineProps(['p'])
+const { p, i:self } = defineProps(['p', 'i'])
 ref: id = p.id == 'NEW' ? md5(Math.random().toString()) : p.id
 
 watch(() => AS.value[id], v => {
-  if (!v) setTimeout(window.close, 2000)
+  if (!v) setTimeout(() => { window.close(self) }, 2000)
 })
 
 const catchErr = async e => {

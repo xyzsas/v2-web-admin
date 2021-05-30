@@ -1,70 +1,88 @@
 <template>
+  <bar/>
   <div class="app">
-    <bar @home="home"/>
-    <component style="box-shadow: 4px 0px 4px #eee;" v-for="(w, i) in win" @mouseenter="focus = i" :is="w.c" :p="w.p">视图不存在</component>
+    <div v-for="(w, i) in win" class="win" style="box-shadow: 4px 0px 4px #eee;" :key="w.k">
+      <component :is="w.c" :p="w.p" :i="i" @click="w.t = Date.now()">视图不存在</component>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { defineAsyncComponent, markRaw } from 'vue'
+import { computed, defineAsyncComponent, markRaw, nextTick } from 'vue'
 import Loading from './components/Loading.vue'
 import Bar from './components/Bar.vue'
 
-ref: win = []
-ref: I = 0
-ref: focus = -1
-let N = Math.floor(window.innerWidth / 360) || 1
-window.onresize = () => {
-  N = Math.floor(window.innerWidth / 360) || 1
-  while (win.length > N) win.pop()
-  I %= N
-}
-
 const views = {
-  'affair': () => import('./views/Affair.vue'),
-  'batch': () => import('./views/Batch.vue'),
-  'data': () => import('./views/Data.vue'),
-  'group': () => import('./views/Group.vue'),
-  'home': () => import('./views/Home.vue'),
-  'msg': () => import('./views/Msg.vue'),
-  'photo': () => import('./views/Photo.vue'),
-  'preset': () => import('./views/Preset.vue'),
-  'user': () => import('./views/User.vue')
+  affair: () => import('./views/Affair.vue'),
+  batch: () => import('./views/Batch.vue'),
+  data: () => import('./views/Data.vue'),
+  group: () => import('./views/Group.vue'),
+  home: () => import('./views/Home.vue'),
+  msg: () => import('./views/Msg.vue'),
+  photo: () => import('./views/Photo.vue'),
+  preset: () => import('./views/Preset.vue'),
+  user: () => import('./views/User.vue')
 }
 const load = (w) => markRaw(views[w] ? defineAsyncComponent(views[w]) : Loading)
-const next = () => { I++; I %= N }
 
-window.show = (view, params = {}) => {
-  const w = { c: load(view), p: params }
-  if (I == -1) {
-    win = [w]
-    I = 0
-    return
-  }
-  if (view == 'affair' || view == 'data') {
-    win = [w]
-    I = -1
-    return
-  }
-  if (view == 'home') {
-    win.unshift(w)
-    if (win.length > N) win.pop()
-    next()
-    return
-  }
-  if (I == focus && N > 1) next()
-  win[I] = w
-  next()
+ref: win = []
+ref: N = window.innerWidth / 320
+window.onresize = async () => {
+  N = window.innerWidth / 320
+  console.log('N =', N)
+  await nextTick()
+  if (win.length > 1 && space.value < 0) remove((-1) * space.value)
 }
 
+const spaces = {
+  affair: 2.5,
+  batch: 2,
+  data: 2,
+  photo: 2
+}
+const space = computed(() => {
+  let occupied = 0
+  for (const w of win) occupied += spaces[w.v] || 1
+  return N - occupied
+})
+
+function remove (req) {
+  let i = 0
+  const focus = []
+  for (let i = 0; i < win.length; i++) focus.push({ i, t: win[i].t })
+  focus.sort((a, b) => a.t - b.t)
+  for (const f of focus) {
+    // if unpined
+    req -= (spaces[win[f.i].v] || 1)
+    window.close(f.i)
+    if (req <= 0) break
+  }
+}
+
+window.close = (i) => win.splice(i, 1)
+
+window.show = (view, params = {}) => setTimeout(() => {
+  const w = { c: load(view), p: params, v: view, k: Math.random(), t: Date.now() }
+  const req = (spaces[view] || 1) - space.value
+  if (req > 0) remove(req)
+  if (view == 'home') win.unshift(w)
+  else win.push(w)
+})
+
 window.show('home')
-const home = () => { I = -1; window.show('home') }
 </script>
 
 <style scoped>
 div.app {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 3.25rem);
+  overflow-y: hidden;
+  transition: all 0.5s ease;
+}
+div.win {
+  overflow-y: auto;
+  flex-grow: 1;
+  min-height: 100%;
 }
 </style>
 

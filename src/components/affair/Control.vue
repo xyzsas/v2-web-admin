@@ -115,11 +115,11 @@ function msg () {
     : A.value.start
       ? Math.min(ms2s(A.value.start - Date.now()) + 86400, 604800)
       : 604800
-  window.open(`./#/msg?id=${A.value.id}&title=${A.value.title}&link=${encodeURIComponent('/#/@/' + A.value.id)}&duration=${duration}&groups=${A.value.groups}`, '/msg', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
+  window.show('msg', { id: A.value.id, title: A.value.title, link: '/#/@/' + A.value.id, duration, groups: A.value.groups })
 }
 
 function data () {
-  window.open('./#/data/' + A.value.id, '/data/' + A.value.id, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=0,height=600,width=360')
+  window.show('data', { id: A.value.id })
 }
 
 function code () {
@@ -131,10 +131,6 @@ function code () {
 }
 
 function preset () {
-  window.updateAffair = a => {
-    for (const k in a) A.value[k] = a[k]
-  }
-  const win = window.open('./#/preset', '/preset', 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=100000,left=0,height=600,width=360')
-  win.init = { affair: A.value.id, preset: A.value.preset, params: A.value.params }
+  window.show('preset')
 }
 </script>

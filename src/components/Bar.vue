@@ -1,8 +1,8 @@
 <template>
-  <nav class="navbar is-justify-content-space-between mb-2 is-fixed-top pr-3" role="navigation" aria-label="main navigation" style="display: flex;">
+  <nav class="navbar is-flex is-justify-content-space-between is-fixed-top is-align-items-center p-0 box" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <div class="navbar-item" @click="emits('home')">
-        <img src="/img/logo.svg" alt="logo" height="28">
+      <div class="navbar-item" style="cursor: pointer;" @click="home">
+        <img src="/img/logo.svg" alt="logo">
         <h1 class="title">XYZSAS</h1>
       </div>
     </div>
@@ -18,9 +18,9 @@
 </template>
 
 <script setup>
-import { defineEmit } from 'vue'
 import { U } from '../plugins/state.js'
 
-const emits = defineEmit(['home'])
-
+function home () {
+  window.show('home')
+}
 </script>

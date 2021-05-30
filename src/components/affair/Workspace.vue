@@ -3,7 +3,7 @@
   <template v-else>
     <h1 class="title m-0">{{ A.title || '创建新事务' }}</h1>
     <hr class="m-3">
-    <textarea v-if="CS.code" class="yml" style="flex-grow: 1;" v-model="A.content"></textarea>
+    <textarea v-if="CS.code" class="code" style="flex-grow: 1;" v-model="A.content"></textarea>
     <editor v-else v-model="A.content" :key="key"></editor>
   </template>
 </template>

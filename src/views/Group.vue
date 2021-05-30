@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 360px; flex-grow: 1;">
+  <div class="p-4" style="min-width: 360px; min-height: 100%; position: relative;">
     <h1 class="title is-4 mb-5" style="margin-bottom: 5px;">用户组</h1>
     <div v-for="i in items" class="is-flex mb-2 is-align-items-center" :style="levelStyle(i)">
       <span class="icon" @click="expand[i.group] = !expand[i.group]">
@@ -19,7 +19,7 @@
         </span>
       </button>
     </div>
-    <div class="modal" :class="{ 'is-active': select }">
+    <div class="modal" style="position: absolute;" :class="{ 'is-active': select }">
       <div class="modal-background" @click="select = ''"></div>
       <div class="modal-card">
         <section class="modal-card-body">
@@ -37,12 +37,12 @@ import { computed, watch, defineProps } from 'vue'
 import { GS, userdata, token } from '../plugins/state.js'
 import axios from '../plugins/axios.js'
 import Item from '../components/Item.vue'
-const { p } = defineProps(['p'])
+const { p, i:self } = defineProps(['p', 'i'])
 const root = p.id
 const rootLevel = (root.match(/\//g) || []).length
 
 watch(() => GS.value[root], v => {
-  if (!v) setTimeout(window.close, 2000)
+  if (!v) setTimeout(() => { window.close(self) }, 2000)
 })
 
 ref: expand = {}

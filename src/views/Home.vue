@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="home container">
     <nav class="panel">
       <p class="panel-heading">
         <span class="icon is-left">
@@ -109,7 +109,7 @@ init()
 </script>
 
 <style scoped>
-div.container {
+div.home {
   padding: 3%;
   min-width: 360px;
   min-width: 40vw;

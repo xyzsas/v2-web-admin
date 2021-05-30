@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 360px; flex-grow: 1;">
+  <div class="p-4" style="min-width: 360px; min-height: 100%;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
     <div class="box" v-if="user">
@@ -44,7 +44,7 @@ import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import { U, US, userdata, token } from '../plugins/state.js'
 import QrcodeVue from 'qrcode.vue'
-const { p } = defineProps(['p'])
+const { p, i:self } = defineProps(['p', 'i'])
 
 ref: user = null
 ref: username = ''
@@ -55,7 +55,7 @@ ref: possesionloading = false
 
 const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()) : p.id)
 watch(US, v => {
-  if (p.id != 'NEW' && !v[p.id]) setTimeout(window.close, 2000)
+  if (p.id != 'NEW' && !v[p.id]) setTimeout(() => { window.close(self) }, 2000)
 })
 
 const qrurl = computed(() => window.location.origin + '/#/password?id=' + id.value)
