@@ -1,11 +1,11 @@
 <template>
-  <div class="p-4" style="max-width: 500px;">
+  <div style="max-width: 500px;">
     <h1 class="title is-4">预设模板</h1>
     <p class="subtitle is-6">事务：<code>{{ affair }}</code></p>
     <loading v-if="!Object.keys(presets).length">正在载入... </loading>
     <template v-else>
       <div class="select">
-        <select v-model="preset" style="width: 100vw;" @change="select">
+        <select v-model="preset" style="width: 100%;" @change="select">
           <option value="">无预设</option>
           <option v-for="(v, p) in presets" :value="p">{{ p.replace('.js', '') }}</option>
         </select>
@@ -22,14 +22,16 @@
 </template>
 
 <script setup>
+import { defineProps } from 'vue'
 import axios from '../plugins/axios.js'
-import { token } from '../plugins/state.js'
+import { A, token } from '../plugins/state.js'
 import { getUrl } from '../plugins/convention.js'
 import Loading from '../components/Loading.vue'
-if (!window.init) window.close()
-ref: affair = window.init.affair
-ref: preset = window.init.preset || ''
-ref: params = window.init.params || ''
+const { i:self } = defineProps(['i'])
+if (!A.value) window.close(self)
+ref: affair = A.value.id
+ref: preset = A.value.preset || ''
+ref: params = A.value.params || ''
 ref: presets = []
 ref: loading = false
 ref: M = null
@@ -61,8 +63,7 @@ async function select () {
   try {
     M = await import(/* @vite-ignore */getUrl('preset' + preset, presets[preset], template))
     console.log(M)
-    if (window.init.params) delete window.init.params
-    else params = jsyaml.dump(M.params)
+    if (params == '') params = jsyaml.dump(M.params)
   } catch (e) {
     Swal.fire('预设载入错误', '', 'error')
     console.error(e)
@@ -82,9 +83,9 @@ async function apply () {
     const res = await M.generate(p)
     res.preset = preset
     res.params = params
-    window.opener.updateAffair(res)
+    for (const k in res) A.value[k] = res[k]
     await Swal.fire('预设应用成功', '', 'success')
-    window.close()
+    window.close(self)
   } catch (e) {
     Swal.fire('预设模板错误', e.toString(), 'error')
   }

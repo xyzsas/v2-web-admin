@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 650px;">
+  <div style="min-width: 320px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">批量下载用户照片</h1>
     <label class="label mt-2">用户组：</label>
     <group-selector v-model="groups"></group-selector>

@@ -39,7 +39,7 @@ export const GS = computed(() => { // groups
 userdata.value = LS.userdata ? JSON.parse(LS.userdata) : {}
 AS.value = LS.affairs ? JSON.parse(LS.affairs) : {}
 
-// sync among windows and tabs
+// sync to cache
 watchEffect(() => {
   const s = JSON.stringify(userdata.value)
   if (LS.userdata == s) return

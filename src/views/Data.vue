@@ -1,9 +1,9 @@
 <template>
-  <div class="p-4">
+  <div>
     <h1 class="title is-4 mb-0">事务数据</h1>
-    <code class="is-inline-block m-1" style="font-size: 0.8rem;">{{ affair }}</code>
+    <code class="is-inline-block m-1" style="font-size: 0.8rem;">{{ p.id }}</code>
     <button class="button is-primary is-small ml-3" @click="show = 'import'">添加数据</button>
-    <data-import v-if="show == 'import'" :id="affair" @update="update"/>
+    <data-import v-if="show == 'import'" :id="p.id" @update="update"/>
     <loading v-if="!data">正在载入...</loading>
     <div class="list is-fullwidth mt-3" v-else>
       <p v-if="!data.length">暂无数据</p>
@@ -16,7 +16,7 @@
       </div>
       <div v-if="show == 'list'" class="data m-2" v-for="(d, i) in data">
         <input type="checkbox" :value="d" v-model="chosen">
-        {{ d.replace(affair + '$_', '组件 ').replace(affair + '$', '') }}
+        {{ d.replace(p.id + '$_', '组件 ').replace(p.id + '$', '') }}
       </div>
       <data-export v-if="show == 'export'" :ids="chosen" />
     </div>
@@ -24,16 +24,13 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, defineProps } from 'vue'
 import axios from '../plugins/axios.js'
 import { token } from '../plugins/state.js'
 import Loading from '../components/Loading.vue'
 import DataImport from '../components/data/Import.vue'
 import DataExport from '../components/data/Export.vue'
-const route = useRoute()
-const router = useRouter()
-const affair = route.params.id
+const { p } = defineProps(['p'])
 
 ref: data = null
 ref: chosen = []
@@ -45,7 +42,7 @@ const catchErr = async e => {
   if (!data) window.close()
 }
 
-axios.get('/data/?affair=' + affair, token())
+axios.get('/data/?affair=' + p.id, token())
   .then(res => { data = res.data; chosen = [] })
   .catch(catchErr)
 

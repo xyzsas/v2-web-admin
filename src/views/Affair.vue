@@ -1,5 +1,5 @@
 <template>
-  <div class="affair p-2 tile is-ancestor affair">
+  <div class="affair tile is-ancestor affair">
     <div class="tile is-parent is-vertical is-4">
       <div class="tile is-child">
         <affair-info></affair-info>
@@ -26,12 +26,10 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
+import { watch, defineProps } from 'vue'
 import axios from '../plugins/axios.js'
 import { AS, U, A, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter(), route = useRoute()
 // components
 import AffairInfo from '../components/affair/Info.vue'
 import AffairVars from '../components/affair/Vars.vue'
@@ -39,10 +37,11 @@ import AffairPieces from '../components/affair/Pieces.vue'
 import AffairControl from '../components/affair/Control.vue'
 import AffairWorkspace from '../components/affair/Workspace.vue'
 
-ref: id = route.params.id == 'NEW' ? md5(Math.random().toString()) : route.params.id
+const { p, i:self } = defineProps(['p', 'i'])
+ref: id = p.id == 'NEW' ? md5(Math.random().toString()) : p.id
 
 watch(() => AS.value[id], v => {
-  if (!v) setTimeout(window.close, 2000)
+  if (!v) setTimeout(() => { window.close(self) }, 2000)
 })
 
 const catchErr = async e => {
@@ -71,7 +70,7 @@ async function getAffair () {
 }
 
 A.value = null
-if (route.params.id != 'NEW') getAffair()
+if (p.id != 'NEW') getAffair()
 else {
   A.value = { id, groups: U.group, vars: '', pieces: {}, content: '<p>在左侧设置事务基本信息</p><p>在此处编辑事务</p><p>在右侧可应用模板</p>' }
 }
@@ -80,8 +79,8 @@ else {
 <style scoped>
 div.affair {
   min-height: 100vh;
+  min-width: 720px;
   margin: 0;
-  width: 100%;
 }
 span.tag {
   position: absolute;

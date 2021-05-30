@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 650px; max-width: 800px;">
+  <div style="min-width: 640px; max-width: 800px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">批量操作用户</h1>
     <textarea class="textarea has-fixed-size is-small mt-3 mb-5" rows="3" v-model="input" placeholder="从Excel中复制的用户信息，按照下列顺序，无需表头" :disabled="loading"></textarea>
     <h1 class="title is-5 is-flex is-align-items-center">

@@ -1,7 +1,5 @@
 <template>
-  <div class="container">
-    <h1 class="title is-spaced">您好，管理员{{ U.name }}</h1>
-    <p class="subtitle is-6">用户组：<code>{{ U.group }}</code></p>
+  <div class="home">
     <nav class="panel">
       <p class="panel-heading">
         <span class="icon is-left">
@@ -27,13 +25,13 @@
         {{ loading || '用户管理' }}
       </p>
       <div class="panel-block buttons" style="margin: 0;">
-        <button class="button" @click="go('/group/' + encodeURIComponent(U.group))">用户组</button>
-        <button class="button" @click="go('/user/NEW')">添加用户</button>
-        <button class="button" @click="go('/batch', 700)">批量操作</button>
+        <button class="button" @click="go('group', { id: U.group })">用户组</button>
+        <button class="button" @click="go('user', { id: 'NEW' })">添加用户</button>
+        <button class="button" @click="go('batch')">批量操作</button>
       </div>
       <div class="panel-block buttons" style="margin: 0;">
-        <button class="button is-info" @click="go('/msg')">发布消息</button>
-        <button class="button" @click="go('/photo', 700)">下载照片</button>
+        <button class="button is-info" @click="go('msg')">发布消息</button>
+        <button class="button" @click="go('photo')">下载照片</button>
       </div>
       <div class="panel-block">备注：用户默认密码为<code>XYZSAS</code></div>
     </nav>
@@ -45,7 +43,7 @@
         {{ loading || '事务管理' }}
       </p>
       <div class="panel-block">
-        <button class="button is-primary" @click="go('/affair/NEW', 1000)">创建新事务</button>
+        <button class="button is-primary" @click="go('affair', { id: 'NEW' })">创建新事务</button>
       </div>
       <div class="panel-block" v-for="(v, k) in AS">
         <item type="affair" :id="k">{{ v }}</item>
@@ -78,8 +76,8 @@ const searchResult = computed(() => {
   return res
 })
 
-const go = (r, w = 360) => {
-  window.open('./#' + r, r, 'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=no,top=10000,left=10000,height=600,width=' + w)
+const go = (v, p) => {
+  window.show(v, p)
 }
 
 ref: loading = ''
@@ -111,7 +109,9 @@ init()
 </script>
 
 <style scoped>
-div.container {
-  padding: 5%;
+div.home {
+  padding: 2%;
+  width:  100%;
+  min-width: 320px;
 }
 </style>

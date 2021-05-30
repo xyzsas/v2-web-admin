@@ -1,9 +1,9 @@
 <template>
-  <div class="p-4" style="max-width: 400px;">
+  <div style="min-width: 320px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
     <div class="box" v-if="user">
-      <template v-if="route.params.id == 'NEW'">
+      <template v-if="p.id == 'NEW'">
         <label class="label">登录用户名：</label>
         <input v-model="username" class="input is-small">
       </template>
@@ -18,12 +18,12 @@
         <button class="button is-small is-danger" :class="{ 'is-loading': loading }" @click="remove">删除用户</button>
       </div>
     </div>
-    <div v-if="route.params.id == 'NEW'" style="position: relative;">
+    <div v-if="p.id == 'NEW'" style="position: relative;">
       <h2 class="title is-5 mt-6">用户扫码设置初始密码</h2>
       <qrcode-vue :value="qrurl" size="200"></qrcode-vue>
       <img src="/img/logo.svg" class="qrlogo">
     </div>
-    <div class="buttons" v-if="route.params.id != 'NEW'">
+    <div class="buttons" v-if="p.id != 'NEW'">
       <button class="button is-small is-warning" v-if="user && user.role != 'ADMIN'" @click="possesion" :class="{ 'is-loading': possesionloading }">以此用户身份登录</button>
       <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
     </div>
@@ -39,14 +39,12 @@
 </template>
 
 <script setup>
-import { computed, watch } from 'vue'
+import { computed, watch, defineProps } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import { U, US, userdata, token } from '../plugins/state.js'
-import { useRouter, useRoute } from 'vue-router'
 import QrcodeVue from 'qrcode.vue'
-
-const router = useRouter(), route = useRoute()
+const { p, i:self } = defineProps(['p', 'i'])
 
 ref: user = null
 ref: username = ''
@@ -55,14 +53,14 @@ ref: msgs = null
 ref: msgloading = false
 ref: possesionloading = false
 
-const id = computed(() => route.params.id == 'NEW' ? username && md5(username.toUpperCase()) : route.params.id)
+const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()) : p.id)
 watch(US, v => {
-  if (route.params.id != 'NEW' && !v[route.params.id]) setTimeout(window.close, 2000)
+  if (p.id != 'NEW' && !v[p.id]) setTimeout(() => { window.close(self) }, 2000)
 })
 
 const qrurl = computed(() => window.location.origin + '/#/password?id=' + id.value)
 
-const title = computed(() => route.params.id == 'NEW'
+const title = computed(() => p.id == 'NEW'
   ? '创建新用户'
   : user ? user.name : '正在载入...'
 )
@@ -82,7 +80,7 @@ function getUser () {
     .catch(catchErr)
 }
 
-if (route.params.id != 'NEW') getUser()
+if (p.id != 'NEW') getUser()
 else user = {}
 
 async function submit () {

@@ -11,8 +11,7 @@
     "jshashes": "^1.0.8",
     "jszip": "^3.6.0",
     "qrcode.vue": "^3.2.2",
-    "vue": "^3.0.5",
-    "vue-router": "^4.0.4"
+    "vue": "^3.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.1.5",

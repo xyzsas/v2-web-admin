@@ -1,6 +1,6 @@
 <template>
-  <div class="select is-small is-multiple">
-    <select multiple size="4" v-model="selected" style="width: 100vh;" @change="change">
+  <div class="select is-small is-multiple" style="width: 100%;">
+    <select multiple size="4" v-model="selected" style="width: 100%;" @change="change">
       <option v-for="g in displayGroups">{{ g }}</option>
     </select>
     <p class="mb-2">电脑端按住<code>Ctrl</code>键取消选择</p>
