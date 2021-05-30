@@ -2,6 +2,14 @@
   <bar/>
   <div class="app">
     <div v-for="(w, i) in win" class="win" style="box-shadow: 4px 0px 4px #eee;" :key="w.k">
+      <div class="buttons mb-0 is-right pb-0 pt-2">
+        <button class="button is-white is-small" @click="w.pin = !w.pin">
+          <span class="icon"><i class="mdi mdi-24px" :class="{ 'mdi-pin-outline': !w.pin, 'mdi-pin-off-outline': w.pin }" /></span>
+        </button>
+        <button class="button is-white is-small" @click="win.length > 1 && win.splice(i, 1)">
+          <span class="icon"><i class="mdi mdi-24px mdi-close" /></span>
+        </button>
+      </div>
       <component :is="w.c" :p="w.p" :i="i" @click="w.t = Date.now()">视图不存在</component>
     </div>
   </div>
@@ -52,7 +60,7 @@ function remove (req) {
   for (let i = 0; i < win.length; i++) focus.push({ i, t: win[i].t })
   focus.sort((a, b) => a.t - b.t)
   for (const f of focus) {
-    // if unpined
+    if (win[f.i].pin) continue
     req -= (spaces[win[f.i].v] || 1)
     window.close(f.i)
     if (req <= 0) break
@@ -62,10 +70,11 @@ function remove (req) {
 window.close = (i) => win.splice(i, 1)
 
 window.show = (view, params = {}) => setTimeout(() => {
-  const w = { c: load(view), p: params, v: view, k: Math.random(), t: Date.now() }
+  const w = { c: load(view), p: params, v: view, k: Math.random(), t: Date.now(), pin: false }
   const req = (spaces[view] || 1) - space.value
   if (req > 0) remove(req)
-  if (view == 'home') win.unshift(w)
+  if (win.length > 0 && win[0].v == 'home' && view == 'home') win[0].k = Math.random()
+  else if (view == 'home') win.unshift(w)
   else win.push(w)
 })
 

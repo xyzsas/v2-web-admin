@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4" style="min-width: 360px; min-height: 100%; position: relative;">
+  <div class="p-4" style="min-width: 320px; min-height: 100%; position: relative;">
     <h1 class="title is-4 mb-5" style="margin-bottom: 5px;">用户组</h1>
     <div v-for="i in items" class="is-flex mb-2 is-align-items-center" :style="levelStyle(i)">
       <span class="icon" @click="expand[i.group] = !expand[i.group]">
