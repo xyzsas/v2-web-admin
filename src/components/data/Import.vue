@@ -40,7 +40,7 @@ const display = computed (() => {
       res[id] = JSON.stringify(val)
     }
   }
-  delete res[labels[0]]
+  delete res[labels[0].toUpperCase()]
   return res
 })
 

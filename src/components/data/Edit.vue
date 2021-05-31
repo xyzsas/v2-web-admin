@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <h1 class="title is-4 mb-0">数据详情</h1>
-    <button class="button is-primary is-small mt-3" @click="update" :class="{ 'is-loading': loading }">更新</button>
+  <div class="data">
+    <button class="button is-primary is-small mt-3" @click="edit" :class="{ 'is-loading': loading }">更新</button>
     <p v-if="error" class="tag is-danger is-light">{{ error }}</p>
     <loading v-if="!data">正在载入...</loading>
     <div class="list is-fullwidth mt-3" v-else>
@@ -12,13 +11,11 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import axios from '../plugins/axios.js'
-import { token } from '../plugins/state.js'
-import Loading from '../components/Loading.vue'
-const route = useRoute()
-const id = route.params.id
+import { computed, defineProps } from 'vue'
+import axios from '../../plugins/axios.js'
+import { token } from '../../plugins/state.js'
+import Loading from '../Loading.vue'
+const { id } = defineProps(['id'])
 
 ref: data = ''
 ref: original = ''
@@ -50,24 +47,24 @@ function display (d) {
       res[id] = JSON.stringify(val)
     }
   }
-  delete res[labels[0]]
+  delete res[labels[0].toUpperCase()]
   return res
 }
 
 
 axios.get('/data/' + id, token())
 .then(res => { 
+  console.log(res.data)
   data += 'id\t' + Object.keys(JSON.parse(res.data[Object.keys(res.data)[0]])).join('\t') + '\n'
   for (const d in res.data) {
-    data += `${d}\t${Object.keys(JSON.parse(res.data[d])).join('\t')}\n`
+    data += `${d}\t${Object.values(JSON.parse(res.data[d])).join('\t')}\n`
   }
-  original = data
 })
 .catch(catchErr)
 
 
 
-async function update () {
+async function edit () {
   if (original === data) {
     Swal.fire('更新成功', '', 'success')
     return

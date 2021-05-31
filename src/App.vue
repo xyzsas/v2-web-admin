@@ -37,7 +37,6 @@ ref: win = []
 ref: N = window.innerWidth / 320
 window.onresize = async () => {
   N = window.innerWidth / 320
-  console.log('N =', N)
   await nextTick()
   if (win.length > 1 && space.value < 0) remove((-1) * space.value)
 }
