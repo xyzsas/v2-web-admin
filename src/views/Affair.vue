@@ -1,26 +1,14 @@
 <template>
-  <div class="affair tile is-ancestor affair">
-    <div class="tile is-parent is-vertical is-4">
-      <div class="tile is-child">
-        <affair-info></affair-info>
-      </div>
+  <div class="affair">
+    <div style="min-width: 240px;">
+      <affair-info></affair-info>
     </div>
-    <div class="tile is-parent is-vertical is-5">
-      <div class="tile is-child box is-flex is-flex-direction-column" style="position: relative;">
-        <span class="tag is-info is-light">编辑/预览</span>
-        <affair-workspace></affair-workspace>
-      </div>
+    <div class="box is-flex is-flex-direction-column ml-4 mr-4" style="position: relative; max-width: 480px; min-width: 320px;">
+      <span class="tag is-info is-light">编辑/预览</span>
+      <affair-workspace></affair-workspace>
     </div>
-    <div class="tile is-parent is-vertical is-3">
-      <div class="tile is-child">
-        <affair-control></affair-control>
-      </div>
-      <div class="tile is-child">
-        <affair-vars></affair-vars>
-      </div>
-      <div class="tile is-child">
-        <affair-pieces></affair-pieces>
-      </div>
+    <div style="min-width: 200px;">
+      <affair-control></affair-control>
     </div>
   </div>
 </template>
@@ -32,8 +20,6 @@ import { AS, U, A, token } from '../plugins/state.js'
 import { md5 } from '../plugins/convention.js'
 // components
 import AffairInfo from '../components/affair/Info.vue'
-import AffairVars from '../components/affair/Vars.vue'
-import AffairPieces from '../components/affair/Pieces.vue'
 import AffairControl from '../components/affair/Control.vue'
 import AffairWorkspace from '../components/affair/Workspace.vue'
 
@@ -78,9 +64,13 @@ else {
 
 <style scoped>
 div.affair {
-  min-height: 100vh;
+  min-height: 95%;
   min-width: 720px;
+  display: flex;
   margin: 0;
+}
+div.affair * {
+  flex-grow: 1;
 }
 span.tag {
   position: absolute;

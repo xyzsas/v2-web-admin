@@ -18,8 +18,7 @@
         <button class="button is-link is-small is-fullwidth" @click="data">管理数据</button>
       </p>
     </div>
-    <hr class="mt-0 mb-2">
-    <h2 class="title is-6 mb-2">预设模板：</h2>
+    <h2 class="title is-6 m-2">预设模板：</h2>
     <code style="display: block;">{{ A.preset ? A.preset.replace('.js', '') : '未应用预设模板' }}</code>
     <div class="buttons mt-2">
       <button class="button is-fullwidth is-primary is-small is-light" @click="preset">
@@ -35,6 +34,12 @@
         <span>{{ CS.code ? '显示渲染效果' : '显示原始代码' }}</span>
       </button>
     </div>
+    <h2 class="title is-6 m-2">事务变量：</h2>
+    <textarea rows="8" class="code" v-model="A.vars" placeholder="$key: value"></textarea>
+    <p style="font-size: 0.7rem; margin-bottom: 16px;">变量名必须为英文！</p>
+    <h2 class="title is-6 m-2">事务组件：</h2>
+    <p v-if="!Object.keys(A.pieces).length">暂无组件</p>
+    <p class="mb-2" v-for="(v, k) in A.pieces"><code>{{ k }}</code>&nbsp;{{ pieceName(v) }}</p>
   </template>
 </template>
 
@@ -45,6 +50,10 @@ import { AS, CS, A, token } from '../../plugins/state.js'
 import format from '../../plugins/format.js'
 import Loading from '../../components/Loading.vue'
 ref: loading = false
+
+const pieceName = T => ({
+  simple: '简单组件'
+})[T]
 
 const catchErr = async e => {
   console.log(e)
@@ -57,7 +66,7 @@ async function submit () {
     return
   }
   loading = true
-  // wait for pieces
+  // wait for mustache
   await nextTick()
   await nextTick()
   const an = {
@@ -73,9 +82,9 @@ async function submit () {
   if (A.value.anonymous) an.anonymous = A.value.anonymous
   if (A.value.preset) an.preset = A.value.preset
   if (A.value.params) an.params = A.value.params
+  an.pieces = JSON.stringify(A.value.pieces || {})
   const vars = jsyaml.load(A.value.vars)
   for (const k in vars) if (k[0] === '$') an[k] = vars[k]
-  for (const k in A.value.pieces) an[k] = JSON.stringify(A.value.pieces[k])
   await axios.post('/affair/' + A.value.id, an, token())
     .then(() => {
       Swal.fire('成功', '', 'success')
