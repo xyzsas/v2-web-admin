@@ -1,11 +1,10 @@
 <template>
   <div class="data">
-    <button class="button is-primary is-small mt-3" @click="edit" :class="{ 'is-loading': loading }">更新</button>
-    <p v-if="error" class="tag is-danger is-light">{{ error }}</p>
-    <loading v-if="!data">正在载入...</loading>
-    <div class="list is-fullwidth mt-3" v-else>
-      <p v-if="!data.length">暂无数据</p>
-      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;" v-model="data" :disabled="loading"/>
+    <input class="input is-info" type="text" placeholder="输入查询人员ID" v-model="uid" @keyup.enter="search">
+    <!-- <button class="button is-primary is-small mt-3" @click="edit" :class="{ 'is-loading': loading }">更新</button> -->
+    <div class="list is-fullwidth mt-3">
+      <p v-if="!studentInfo.length">暂无数据</p>
+      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;" v-model="studentInfo" readonly/>
     </div>
   </div>
 </template>
@@ -15,75 +14,71 @@ import { computed, defineProps } from 'vue'
 import axios from '../../plugins/axios.js'
 import { token } from '../../plugins/state.js'
 import Loading from '../Loading.vue'
-const { id } = defineProps(['id'])
+const { values } = defineProps(['values'])
 
-ref: data = ''
-ref: original = ''
-ref: error = ''
+ref: data = {}
+ref: studentInfo = ''
 ref: loading = false
+ref: uid = ''
+
+let uids = new Set()
+for (const id in values) {
+  console.log(values[id])
+  for (const u in values[id]) uids.add(u)
+}
+uids = Array.from(uids)
+const dids = Object.keys(values)
+
+// reconstruct the data to make it based on users 
+function parse () {
+  data['title'] = 'id\t' + dids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).join('\t') + '\n'
+  for (const u of uids) {
+    data[u] = u + '\t'
+    for (const id of dids) data[u] += (values[id][u] || '') + '\t'
+    data[u].substring(0, data.length - 2)
+  }
+  
+  console.log(data)
+}
+parse()
 
 const catchErr = async e => {
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
   if (!data) window.close()
 }
 
-function display (d) {
-  const res = {}
-  error = ''
-  const rows = d.split('\n')
-  const labels = rows[0].split('\t')
-  if (labels.length < 2) {
-    error = '数据格式错误, 需要至少两列'
-    return false
-  }
-  for (const r of rows) {
-    const info = r.split('\t')
-    const id = info[0].toUpperCase()
-    if (info.length === 2) res[id] = info[1]
-    else {
-      const val = {}
-      for (let i = 1; i < labels.length; i++)
-        val[labels[i]] = info[i]
-      res[id] = JSON.stringify(val)
+function parseOne (d) {
+  let vals = d.split('\t')
+  let res = ''
+  vals.shift()
+  vals = vals.filter(x => x && x.length > 0)
+  try {
+    vals = vals.map(x => JSON.parse(x))
+    let keys = []
+    for (const v of vals) {
+      for (const k in v) keys.push(k)
     }
+    res = 'id\t' + keys.join('\t') + '\n' + uid + '\t'
+    for (const v of vals) {
+      for (const k in v) res += (v[k] || '') + '\t'
+    }
+  } catch (e) {
+    console.log(e)
   }
-  delete res[labels[0].toUpperCase()]
   return res
 }
 
-
-axios.get('/data/' + id, token())
-.then(res => { 
-  console.log(res.data)
-  data += 'id\t' + Object.keys(JSON.parse(res.data[Object.keys(res.data)[0]])).join('\t') + '\n'
-  for (const d in res.data) {
-    data += `${d}\t${Object.values(JSON.parse(res.data[d])).join('\t')}\n`
-  }
-})
-.catch(catchErr)
-
-
-
-async function edit () {
-  if (original === data) {
-    Swal.fire('更新成功', '', 'success')
-    return
-  }
-  loading = true
-  const edited = display(data)
-  const raw = display(original)
-  let dels = {}, puts = {}
-
-  for (const r in raw) {
-    if (edited[r] === undefined) dels[r] = 1
-    else if (edited[r] !== raw[r]) puts[r] = edited[r]
-  }
-  console.log(puts)
-  await axios.put(`/data/${id}`, { puts, dels }, token())
-    .then(() => Swal.fire('数据更新成功', '', 'success'))
-    .catch(catchErr)
-  loading = false
+function search() {
+  studentInfo = ''
+  console.log(uid)
+  if (!uid || !uids.includes(uid)) return
+  studentInfo = parseOne(data[uid])
 }
+
+function display () {}
+
+// TODO: edit
+async function edit () {}
 
 </script>
 

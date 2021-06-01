@@ -19,7 +19,7 @@
     </div>
     <data-import v-if="show == 'import'" :id="p.id" @edit="edit"/>
     <data-export v-if="show == 'export'" :values="data" />
-    <data-edit v-if="show == 'edit'" :id="chosen[0]" />
+    <data-edit v-if="show == 'edit'" :values="data" />
     <div v-if="show == 'list'" class="is-fullwidth mt-3">
       <p v-if="!ids.length" class="ml-3">暂无数据</p>
       <p v-else class="ml-3" style="text-decoration: underline; cursor: pointer;" @click="selectAll">全选</p>
