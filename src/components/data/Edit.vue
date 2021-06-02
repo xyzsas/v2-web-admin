@@ -1,85 +1,58 @@
 <template>
   <div class="data">
-    <input class="input is-info" type="text" placeholder="输入查询人员ID" v-model="uid" @keyup.enter="search">
-    <!-- <button class="button is-primary is-small mt-3" @click="edit" :class="{ 'is-loading': loading }">更新</button> -->
-    <div class="list is-fullwidth mt-3">
-      <p v-if="!studentInfo.length">暂无数据</p>
-      <textarea id="d-copy" class="textarea has-fixed-size is-large mt-3 mb-3" style="overflow-y: scroll; height: 80vh;" v-model="studentInfo" readonly/>
-    </div>
+    <input class="input is-info" type="text" placeholder="id" v-model="uid">
+    <p class="m-2" v-if="!data.length">暂无数据</p>
+    <template v-else>
+      <div class="box" v-for="d in data">
+        <h3 class="title is-4">{{ d.name }}</h3>
+        <input class="input" v-if="!Object.keys(d.data).length" v-model="d.data">
+        <template v-else>
+          <div class="is-flex m-1" v-for="(v, k) in d.data">
+            <label class="label" style="min-width: 120px;">{{ k }}</label>
+            <input class="input is-small" v-model="d.data[k]">
+          </div>
+        </template>
+      </div>
+      <button class="button is-primary" :class="{ 'is-loading': loading }" @click="submit">提交</button>
+    </template>
   </div>
 </template>
 
 <script setup>
-import { computed, defineProps } from 'vue'
+import { watchEffect, defineProps } from 'vue'
 import axios from '../../plugins/axios.js'
 import { token } from '../../plugins/state.js'
-import Loading from '../Loading.vue'
 const { values } = defineProps(['values'])
 
-ref: data = {}
-ref: studentInfo = ''
-ref: loading = false
 ref: uid = ''
-
-let uids = new Set()
-for (const id in values) {
-  console.log(values[id])
-  for (const u in values[id]) uids.add(u)
-}
-uids = Array.from(uids)
-const dids = Object.keys(values)
-
-// reconstruct the data to make it based on users 
-function parse () {
-  data['title'] = 'id\t' + dids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).join('\t') + '\n'
-  for (const u of uids) {
-    data[u] = u + '\t'
-    for (const id of dids) data[u] += (values[id][u] || '') + '\t'
-    data[u].substring(0, data.length - 2)
+ref: data = []
+ref: oldData = []
+watchEffect(() => {
+  data = []
+  oldData = []
+  for (const id in values) {
+    if (values[id][uid]) {
+      let d = values[id][uid]
+      oldData.push(d)
+      try {
+        d = JSON.parse(d)
+      } catch {
+        d = values[id][uid]
+      }
+      data.push({ id, name: id.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, ''), data: d })
+    }
   }
-  
-  console.log(data)
-}
-parse()
+  return data
+})
 
+ref: loading = false
 const catchErr = async e => {
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
   if (!data) window.close()
 }
 
-function parseOne (d) {
-  let vals = d.split('\t')
-  let res = ''
-  vals.shift()
-  vals = vals.filter(x => x && x.length > 0)
-  try {
-    vals = vals.map(x => JSON.parse(x))
-    let keys = []
-    for (const v of vals) {
-      for (const k in v) keys.push(k)
-    }
-    res = 'id\t' + keys.join('\t') + '\n' + uid + '\t'
-    for (const v of vals) {
-      for (const k in v) res += (v[k] || '') + '\t'
-    }
-  } catch (e) {
-    console.log(e)
-  }
-  return res
+async function submit () {
 }
-
-function search() {
-  studentInfo = ''
-  console.log(uid)
-  if (!uid || !uids.includes(uid)) return
-  studentInfo = parseOne(data[uid])
-}
-
-function display () {}
-
-// TODO: edit
-async function edit () {}
-
 </script>
 
 <style scoped>

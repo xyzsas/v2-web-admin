@@ -13,6 +13,9 @@
       <p class="control" v-if="show != 'export'">
         <button class="button" :disabled="!chosen.length" :class="{ 'is-loading': loading }" @click="go('export')">导出数据</button>
       </p>
+      <p class="control" v-if="show != 'list'">
+        <button class="button" :disabled="!chosen.length" :class="{ 'is-loading': loading }" @click="fetch">刷新数据</button>
+      </p>
       <p class="control" v-if="show != 'edit'">
         <button class="button" :disabled="!chosen.length" :class="{ 'is-loading': loading }" @click="go('edit')">查询/编辑</button>
       </p>
@@ -54,7 +57,12 @@ const catchErr = async e => {
 }
 
 axios.get('/data/?affair=' + p.id, token())
-  .then(res => { ids = res.data; show = 'list'; chosen = [] })
+  .then(res => {
+    ids = res.data
+    show = 'list'
+    chosen = []
+    for (const d of ids) chosen.push(d)
+  })
   .catch(catchErr)
 
 function edit (id) {
@@ -67,9 +75,8 @@ function selectAll () {
   else for (const d of ids) chosen.push(d)
 }
 
-async function go(t) {
+async function fetch () {
   loading = true
-  data = {}
   for (const id of chosen) {
     await axios.get('/data/' + id, token())
       .then(res => { 
@@ -78,6 +85,10 @@ async function go(t) {
       .catch(catchErr)
   }
   loading = false
+}
+
+async function go(t) {
+  await fetch()
   show = t
 }
 </script>
