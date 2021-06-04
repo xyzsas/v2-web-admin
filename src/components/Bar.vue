@@ -6,7 +6,7 @@
         <h1 class="title">XYZSAS</h1>
       </div>
     </div>
-    <div class="buttons m-0">
+    <div class="buttons m-0" v-if="U">
       <h2 class="button is-white m-0 pr-1 pl-1">
         <strong>{{ U.name }}</strong>
       </h2>
