@@ -44,7 +44,7 @@ window.onresize = async () => {
 const spaces = {
   affair: 2.5,
   batch: 2,
-  data: 2,
+  data: 2.5,
   photo: 2
 }
 const space = computed(() => {

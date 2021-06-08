@@ -3,7 +3,18 @@
     <button class="button is-primary is-small mt-3" @click="copy">复制</button>
     <div class="list is-fullwidth mt-3">
       <p v-if="!Object.keys(values)">暂无数据</p>
-      <textarea id="d-copy" class="code" style="overflow-y: scroll; height: 60vh;" :value="data" />
+      <table class="table" id="d-copy">
+        <thead>
+          <tr>
+            <th v-for="d in data[0]">{{ d }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="d in data[1]">
+            <td v-for="v in d">{{ v }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -19,14 +30,16 @@ const data = computed(() => {
     for (const uid in values[id]) uids.add(uid)
   }
   uids = Array.from(uids)
-  let res = ''
+  let res = []
+  let title = []
   function parseMultiple () {
-    res = 'id\t' + ids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).join('\t') + '\n'
     for (const u of uids) {
-      res += u + '\t'
-      for (const id of ids) res += (values[id][u] || '') + '\t'
-      res += '\n'
+      let temp = [u]
+      for (const id of ids) temp.push(values[id][u] || '')
+      res.push(temp)
     }
+    ids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).unshift('id')
+    title = ids
   }
   function parseOne () {
     const d = values[ids[0]]
@@ -37,28 +50,43 @@ const data = computed(() => {
         for (const k in d[u]) keys.add(k)
       }
       keys = Array.from(keys)
-      res = 'id\t' + keys.join('\t') + '\n'
       for (const u of uids) {
-        res += u + '\t'
-        for (const k of keys) res += (d[u][k] || '') + '\t'
-        res += '\n'
+        let temp = [u]
+        for (const k of keys) temp.push(d[u][k] || '')
+        res.push(temp)
       }
+      keys.unshift('id')
+      title = keys
     } catch (e) {
       parseMultiple()
     }
   }
   if (ids.length === 1) parseOne()
   if (ids.length > 1) parseMultiple()
-  return res
+  return [title, res]
 })
+
 
 function copy () {
   try {
     const el = document.querySelector('#d-copy')
-    el.select()
+    if (document.body.createTextRange) {  
+      const range = document.body.createTextRange()
+      range.moveToElementText(el)
+      range.select()
+    } else if (window.getSelection) {
+      const selection = window.getSelection()
+      if (document.createRange) {
+        const range = document.createRange()
+        range.selectNodeContents(el)
+        selection.removeAllRanges()
+        selection.addRange(range)
+      } else selection.setBaseAndExtent(el, 0, el, 1)
+    } else throw ''
     document.execCommand('copy')
     Swal.fire('复制成功', '', 'success')
-  } catch {
+  } catch (e) {
+    console.log(e)
     Swal.fire('错误', '复制内容失败！', 'error')
   }
 }
