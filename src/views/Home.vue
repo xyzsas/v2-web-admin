@@ -46,7 +46,7 @@
         <button class="button is-primary" @click="go('affair', { id: 'NEW' })">创建新事务</button>
       </div>
       <div class="panel-block" v-for="(v, k) in AS">
-        <item type="affair" :id="k">{{ v }}</item>
+        <item type="affair" :id="k" :key="k">{{ v }}</item>
       </div>
     </nav>
   </div>
