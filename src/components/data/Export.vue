@@ -3,7 +3,19 @@
     <button class="button is-primary is-small mt-3" @click="copy">复制</button>
     <div class="list is-fullwidth mt-3">
       <p v-if="!Object.keys(values)">暂无数据</p>
-      <textarea id="d-copy" class="code" style="overflow-y: scroll; height: 60vh;" :value="data" />
+      <textarea id="d-copy" class="code" style="overflow-y: scroll; height: 60vh; display: none;" :value="data[2]" />
+      <table class="table">
+        <thead>
+          <tr>
+            <th v-for="d in data[0]">{{ d }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="d in data[1]">
+            <td v-for="v in d">{{ v }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </template>
@@ -19,14 +31,23 @@ const data = computed(() => {
     for (const uid in values[id]) uids.add(uid)
   }
   uids = Array.from(uids)
-  let res = ''
+  let res = []
+  let title = []
+  let dStr = ''
   function parseMultiple () {
-    res = 'id\t' + ids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).join('\t') + '\n'
+    dStr = 'id\t' + ids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).join('\t') + '\n'
     for (const u of uids) {
-      res += u + '\t'
-      for (const id of ids) res += (values[id][u] || '') + '\t'
-      res += '\n'
+      let temp = [u]
+      dStr += u + '\t'
+      for (const id of ids) {
+        temp.push(values[id][u] || '')
+        dStr += (values[id][u] || '') + '\t'
+      }
+      dStr += '\n'
+      res.push(temp)
     }
+    ids.map(x => x.replace(/^(.+?)\$\_/, '组件 ').replace(/^(.+?)\$/, '')).unshift('id')
+    title = ids
   }
   function parseOne () {
     const d = values[ids[0]]
@@ -37,20 +58,28 @@ const data = computed(() => {
         for (const k in d[u]) keys.add(k)
       }
       keys = Array.from(keys)
-      res = 'id\t' + keys.join('\t') + '\n'
+      dStr = 'id\t' + keys.join('\t') + '\n'
       for (const u of uids) {
-        res += u + '\t'
-        for (const k of keys) res += (d[u][k] || '') + '\t'
-        res += '\n'
+        let temp = [u]
+        dStr += u + '\t'
+        for (const k of keys) {
+          temp.push(d[u][k] || '')
+          dStr += (d[u][k] || '') + '\t'
+        }
+        res.push(temp)
+        dStr += '\n'
       }
+      keys.unshift('id')
+      title = keys
     } catch (e) {
       parseMultiple()
     }
   }
   if (ids.length === 1) parseOne()
   if (ids.length > 1) parseMultiple()
-  return res
+  return [title, res, dStr]
 })
+
 
 function copy () {
   try {
