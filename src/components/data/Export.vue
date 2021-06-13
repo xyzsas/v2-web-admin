@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%;">
     <button class="button is-primary is-small mt-3" @click="copy">复制</button>
-    <div class="list is-fullwidth mt-3" style="overflow: scroll; min-width: 720px;">
+    <div class="is-fullwidth mt-3" style="overflow-x: auto; max-width: 100%;">
       <p v-if="!Object.keys(values)">暂无数据</p>
-      <table class="table" id="d-copy">
+      <table class="table" id="d-copy" style="white-space: nowrap;">
         <thead>
           <tr>
             <th v-for="d in data[0]">{{ d }}</th>
@@ -93,11 +93,6 @@ function copy () {
 </script>
 
 <style scoped>
-div.list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 div.data {
   width: 100%;
 }
