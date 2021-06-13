@@ -58,12 +58,15 @@ function remove (req) {
   const focus = []
   for (let i = 0; i < win.length; i++) focus.push({ i, t: win[i].t })
   focus.sort((a, b) => a.t - b.t)
+  const del = []
   for (const f of focus) {
     if (win[f.i].pin) continue
     req -= (spaces[win[f.i].v] || 1)
-    window.close(f.i)
+    del.push(f.i)
     if (req <= 0) break
   }
+  del.sort().reverse()
+  for (const i of del) window.close(i)
 }
 
 function close (i) {
