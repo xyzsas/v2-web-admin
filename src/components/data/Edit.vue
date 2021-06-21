@@ -55,7 +55,7 @@ watchEffect(() => {
 const edit = computed(() => {
   try {
     err = ''
-    const d = jsyaml.load(input)
+    const d = input.match(/\S/) ? jsyaml.load(input) : {}
     const res = { puts: [], dels: [] }
     for (const id in data) if (!d[id]) res.dels.push(id)
     for (const id in d) if (!isObjEqual(d[id], data[id])) res.puts.push(id)
@@ -75,7 +75,7 @@ const catchErr = async e => {
 }
 
 async function submit () {
-  const da = jsyaml.load(input)
+  const da = input.match(/\S/) ? jsyaml.load(input) : {}
   const puts = edit.value.puts.split(','), dels = edit.value.dels.split(',')
   const update = {}
   for (const p of puts) update[p] = {}

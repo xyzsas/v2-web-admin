@@ -25,7 +25,7 @@
     </template>
     <template v-if="A.anonymous">
       <label class="label mt-2">事务二维码：</label>
-      <qrcode-vue :value="qrurl" size="160"></qrcode-vue>
+      <qrcode-vue :value="qrurl" :size="160"></qrcode-vue>
     </template>
   </template>
 </template>

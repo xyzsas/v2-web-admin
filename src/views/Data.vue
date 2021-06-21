@@ -26,9 +26,14 @@
     <div v-if="show == 'list'" class="is-fullwidth mt-3">
       <p v-if="!ids.length" class="ml-3">暂无数据</p>
       <p v-else class="ml-3" style="text-decoration: underline; cursor: pointer;" @click="selectAll">全选</p>
-      <div class="data m-2" v-for="(d, i) in ids">
+      <div class="data m-2" v-for="(d, i) in ids" :key="d">
         <input type="checkbox" :value="d" v-model="chosen">
-        {{ d.replace(p.id + '$_', '组件 ').replace(p.id + '$', '') }}
+        {{ parseName(d) }}
+        <button class="button is-small is-light is-danger ml-2" @click="remove(i)" :class="{ 'is-loading': removeLoading[d] }">
+          <span class="icon">
+            <i class="mdi mdi-18px mdi-delete"></i>
+          </span>
+        </button>
       </div>
     </div>
   </div>
@@ -50,6 +55,9 @@ ref: chosen = []
 ref: show = 'loading'
 ref: data = {}
 ref: loading = false
+ref: removeLoading = {}
+
+const parseName = d => d.replace(p.id + '$_', '组件 ').replace(p.id + '$', '')
 
 const catchErr = async e => {
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
@@ -85,6 +93,28 @@ async function fetch () {
       .catch(catchErr)
   }
   loading = false
+}
+
+async function remove (i) {
+  const id = ids[i]
+  const res = await Swal.fire({
+    title: '危险操作',
+    html: `确定要删除数据<b>${parseName(id)}</b>吗？`,
+    icon: 'warning',
+    focusCancel: true,
+    confirmButtonText: '确定',
+    showCancelButton: true,
+    cancelButtonText: '取消'
+  })
+  if (!res.isConfirmed) return
+  removeLoading[id] = true
+  await axios.delete('/data/' + id, token())
+    .then(() => {
+      Swal.fire('删除成功', '删除数据' + parseName(id), 'success')
+      removeLoading[id] = true
+    })
+    .catch(catchErr)
+  ids.splice(i, 1)
 }
 
 async function go(t) {

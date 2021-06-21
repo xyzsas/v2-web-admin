@@ -2,9 +2,8 @@
   <div class="is-fullwidth">
     <h1 class="title is-4" style="margin-bottom: 5px;">添加事务数据</h1>
     <input class="input is-small" type="text" v-model="name" placeholder="数据名称，请输入英文">
-    <textarea class="textarea has-fixed-size is-small mt-3 mb-3" rows="3" v-model="input" placeholder="从Excel中复制的事务信息，包括表头" :disabled="loading"></textarea>
-    <p v-if="error" class="tag is-danger is-light">{{ error }}</p>
-    <button class="button is-primary is-small" :class="{ 'is-loading': loading }" @click="submit">提交</button>
+    <textarea class="textarea has-fixed-size is-small mt-3 mb-3" rows="3" v-model="input" placeholder="从Excel中复制的事务信息，包括表头，第一列为id" :disabled="loading"></textarea>
+    <button class="button is-primary is-small" :disabled="!name" :class="{ 'is-loading': loading }" @click="submit">提交</button>
   </div>
 </template>
 <script setup>
@@ -17,44 +16,28 @@ const emits = defineEmit(['update'])
 
 ref: input = ''
 ref: loading = false
-ref: error = ''
 ref: name = ''
 
-const display = computed (() => {
-  const res = {}
-  error = ''
+async function submit () {
+  const data = {}
   const rows = input.split('\n')
   const labels = rows[0].split('\t')
   if (labels.length < 2) {
-    error = '数据格式错误, 需要至少两列'
-    return false
+    Swal.fire('数据错误', '至少需要两列', 'error')
+    return
   }
-  for (const r of rows) {
-    const info = r.split('\t')
-    const id = info[0].toUpperCase()
-    if (info.length === 2) res[id] = info[1]
+  for (let j = 1; j < rows.length; j++) {
+    const r = rows[j].split('\t')
+    if (r.length < 2) continue
+    if (r.length == 2) data[r[0]] = r[1]
     else {
-      const val = {}
-      for (let i = 1; i < labels.length; i++)
-        val[labels[i]] = info[i]
-      res[id] = JSON.stringify(val)
+      const obj = {}
+      for (let i = 1; i < labels.length; i++) obj[labels[i]] = r[i]
+      data[r[0]] = JSON.stringify(obj)
     }
   }
-  delete res[labels[0].toUpperCase()]
-  return res
-})
-
-async function submit () {
-  if (!name) {
-    error = '请输入名称'
-    return
-  }
-  if (!display.value || display.value.length < 1) {
-    error = '缺少数据'
-    return
-  }
   loading = true
-  const res = await axios.post(`/data/${props.id}$${name}`, display.value, token())
+  const res = await axios.post(`/data/${props.id}$${name}`, data, token())
     .then(() => true)
     .catch(e => {
       Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
@@ -63,8 +46,8 @@ async function submit () {
   loading = false
 
   if (!res) return
-  Swal.fire('上传成功', 'success')
-  emits('update', `$${name}`)
+  Swal.fire('上传成功', '', 'success')
+  emits('edit', `${props.id}$${name}`)
 }
 
 </script>

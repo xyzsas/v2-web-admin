@@ -6,13 +6,8 @@
         <h1 class="title">XYZSAS</h1>
       </div>
     </div>
-    <div class="buttons m-0" v-if="U">
-      <h2 class="button is-white m-0 pr-1 pl-1">
-        <strong>{{ U.name }}</strong>
-      </h2>
-      <p class="button is-white m-0 pl-1 pr-1">
-        用户组：<code>{{ U.group }}</code>
-      </p>
+    <div style="font-size: 0.8rem; margin-right: 8px;" v-if="U">
+      <b>{{ U.name }}</b>&nbsp;<code>{{ U.group }}</code>
     </div>
   </nav>
 </template>

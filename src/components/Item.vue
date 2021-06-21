@@ -1,5 +1,5 @@
 <template>
-  <div class="item" @click="go">
+  <div class="item" @click="go()">
     <span class="icon">
       <i class="mdi mdi-24px" :class="icon"></i>
     </span>
@@ -10,6 +10,7 @@
     </div>
     <div class="space">&nbsp;</div>
     <button v-if="type == 'user' && !set" class="button is-small is-warning" :class="{ 'is-loading': loading }" @click.stop="reset">重置密码</button>
+    <button v-if="type == 'affair'" class="button is-small is-light is-info" @click.stop="go('data')">管理数据</button>
   </div>
 </template>
 
@@ -27,8 +28,8 @@ const icon = computed(() => ({
   affair: 'mdi-package-variant-closed'
 }[type]))
 
-function go () {
-  window.show(type, { id })
+function go (v) {
+  window.show(v || type, { id })
 }
 
 ref: loading = false
