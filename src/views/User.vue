@@ -20,7 +20,7 @@
     </div>
     <div v-if="p.id == 'NEW'" style="position: relative;">
       <h2 class="title is-5 mt-6">用户扫码设置初始密码</h2>
-      <qrcode-vue :value="qrurl" size="200"></qrcode-vue>
+      <qrcode-vue :value="qrurl" :size="200"></qrcode-vue>
       <img src="/img/logo.svg" class="qrlogo">
     </div>
     <div class="buttons" v-if="p.id != 'NEW'">
@@ -46,7 +46,7 @@ import { U, US, userdata, token } from '../plugins/state.js'
 import QrcodeVue from 'qrcode.vue'
 const { p, i:self } = defineProps(['p', 'i'])
 
-ref: user = null
+ref: user = {}
 ref: username = ''
 ref: loading = false
 ref: msgs = null
@@ -57,6 +57,9 @@ const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()
 watch(US, v => {
   if (p.id != 'NEW' && !v[p.id]) setTimeout(() => { window.close(self) }, 2000)
 })
+watch(() => user.group, v => {
+  if (!v || v.indexOf(U.group) !== 0) user.group = U.group
+})
 
 const qrurl = computed(() => window.location.origin + '/#/password?id=' + id.value)
 
@@ -64,8 +67,6 @@ const title = computed(() => p.id == 'NEW'
   ? '创建新用户'
   : user ? user.name : '正在载入...'
 )
-
-if (!U || U.role != 'ADMIN') window.close()
 
 const catchErr = async e => {
   console.log(e)
@@ -81,12 +82,12 @@ function getUser () {
 }
 
 if (p.id != 'NEW') getUser()
-else user = {}
+else user.group = U.group
 
 async function submit () {
   if (!id.value) return
   if (user.group.indexOf(U.group) != 0 || user.group[user.group.length-1] != '/') {
-    Swal.fire('用户组错误', '开头和结尾必须是<code>/</code><br>且在管理员权限内', 'error')
+    Swal.fire('用户组错误', '开头和结尾必须是<code>/</code>', 'error')
     return
   }
   loading = true

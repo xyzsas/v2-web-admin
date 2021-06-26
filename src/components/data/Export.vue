@@ -1,6 +1,9 @@
 <template>
   <div style="width: 100%;">
-    <button class="button is-primary is-small mt-3" @click="copy">复制</button>
+    <div class="is-flex is-align-items-center">
+      <button class="button is-primary is-small" @click="copy">复制</button>
+      <div class="ml-3">共计{{ data[1].length }}条数据</div>
+    </div>
     <div class="is-fullwidth mt-3" style="overflow-x: auto; max-width: 100%;">
       <p v-if="!Object.keys(values)">暂无数据</p>
       <table class="table" id="d-copy" style="white-space: nowrap;">
