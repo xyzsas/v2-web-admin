@@ -46,10 +46,22 @@ export default {
     function collect () {
       const html = content.value
       // find all model="_piece"
-      const raw = html.match(/model="data\._(.*?)"/g) || []
+      const pieces = {}
+      let raw = html.match(/model="data\._(.*?)"/g) || []
       for (const rp of raw) {
         const id = rp.substr(12, rp.length - 13)
-        A.value.pieces[id] = 'simple'
+        pieces[id] = 1
+      }
+      raw = html.match(/model="data\['_(.*?)'\]"/g) || []
+      for (const rp of raw) {
+        const id = rp.substr(13, rp.length - 16)
+        pieces[id] = 1
+      }
+      for (const id in A.value.pieces) {
+        if (!pieces[id]) delete A.value.pieces[id]
+      }
+      for (const id in pieces) {
+        if (!A.value.pieces[id]) A.value.pieces[id] = 'simple'
       }
     }
     collect()

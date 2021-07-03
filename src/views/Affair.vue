@@ -3,7 +3,7 @@
     <div style="min-width: 240px;">
       <affair-info></affair-info>
     </div>
-    <div class="box is-flex is-flex-direction-column ml-4 mr-4" style="position: relative; max-width: 480px; min-width: 320px;">
+    <div class="box is-flex is-flex-direction-column ml-4 mr-4" style="position: relative; max-width: 480px; min-width: 320px; width: 400px;">
       <span class="tag is-info is-light">编辑/预览</span>
       <affair-workspace></affair-workspace>
     </div>
