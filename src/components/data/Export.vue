@@ -2,6 +2,7 @@
   <div style="width: 100%;">
     <div class="is-flex is-align-items-center">
       <button class="button is-primary is-small" @click="copy">复制</button>
+      <button class="button is-primary is-small ml-2" v-if="!showInfo" @click="showInfo = true">显示用户信息</button>
       <div class="ml-3">共计{{ data[1].length }}条数据</div>
     </div>
     <div class="is-fullwidth mt-3" style="overflow-x: auto; max-width: 100%;">
@@ -24,7 +25,10 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { US } from '../../plugins/state.js'
 const { values } = defineProps(['values'])
+
+ref: showInfo = false
 
 const data = computed(() => {
   const ids = Object.keys(values)
@@ -33,6 +37,21 @@ const data = computed(() => {
     for (const uid in values[id]) uids.add(uid)
   }
   uids = Array.from(uids)
+  if (showInfo) {
+    if (!values['x$姓名']) {
+      values['x$姓名'] = {}
+      ids.unshift('x$姓名')
+    }
+    if (!values['x$用户组']) {
+      values['x$用户组'] = {}
+      ids.unshift('x$用户组')
+    }
+    for (const u of uids) {
+      if (!US.value[u]) continue
+      values['x$姓名'][u] = US.value[u][0]
+      values['x$用户组'][u] = US.value[u][1]
+    }
+  }
   let res = []
   let title = []
   function parseMultiple () {
@@ -68,7 +87,6 @@ const data = computed(() => {
   if (ids.length > 1) parseMultiple()
   return [title, res]
 })
-
 
 function copy () {
   try {
