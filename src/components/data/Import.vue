@@ -14,9 +14,9 @@ import { token } from '../../plugins/state.js'
 const props = defineProps(['id'])
 const emits = defineEmit(['update'])
 
-ref: input = ''
-ref: loading = false
-ref: name = ''
+let input = $ref('')
+let loading = $ref(false)
+let name = $ref('')
 
 async function submit () {
   const data = {}

@@ -59,7 +59,7 @@ import { md5 } from '../plugins/convention.js'
 import { GS, AS, US, LS, U, userdata, token } from '../plugins/state.js'
 import Item from '../components/Item.vue'
 
-ref: query = ''
+let query = $ref('')
 const searchResult = computed(() => {
   const res = []
   const m = md5(query.toUpperCase())
@@ -80,7 +80,7 @@ const go = (v, p) => {
   window.show(v, p)
 }
 
-ref: loading = ''
+let loading = $ref('')
 async function init () {
   if (!U) {
     window.location.href = '/#/login?c=/admin/'

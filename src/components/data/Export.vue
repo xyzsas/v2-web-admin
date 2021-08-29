@@ -28,7 +28,7 @@ import { defineProps, computed } from 'vue'
 import { US } from '../../plugins/state.js'
 const { values } = defineProps(['values'])
 
-ref: showInfo = false
+let showInfo = $ref(false)
 
 const data = computed(() => {
   const ids = Object.keys(values)

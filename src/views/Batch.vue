@@ -33,10 +33,10 @@ import { computed } from 'vue'
 import axios from '../plugins/axios.js'
 import { md5 } from '../plugins/convention.js'
 import { token, US, userdata } from '../plugins/state.js'
-ref: input = ''
-ref: loading = false
-ref: error = {}
-ref: success = {}
+let input = $ref('')
+let loading = $ref(false)
+let error = $ref({})
+let success = $ref({})
 
 const display = computed (() => {
   const res = {}

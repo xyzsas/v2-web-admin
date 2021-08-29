@@ -32,8 +32,8 @@ function go (v) {
   window.show(v || type, { id })
 }
 
-ref: loading = false
-ref: set = false
+let loading = $ref(false)
+let set = $ref(false)
 async function reset () {
   loading = true
   await axios.post('/user/', { [id]: { password: 1 } }, token())

@@ -37,15 +37,15 @@ import { md5 } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
 const { p } = defineProps(['p'])
 
-ref: byUser = false
-ref: loading = false
-ref: id = p.id || md5(Math.random().toString())
-ref: groups = p.groups || ''
-ref: title = p.title || ''
-ref: subtitle = p.subtitle || ''
-ref: link = p.link || ''
-ref: duration = p.duration || ''
-ref: input = ''
+let byUser = $ref(false)
+let loading = $ref(false)
+let id = $ref(p.id || md5(Math.random().toString()))
+let groups = $ref(p.groups || '')
+let title = $ref(p.title || '')
+let subtitle = $ref(p.subtitle || '')
+let link = $ref(p.link || '')
+let duration = $ref(p.duration || '')
+let input = $ref('')
 
 async function submit () {
   loading = true

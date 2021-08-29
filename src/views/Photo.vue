@@ -27,11 +27,11 @@ import { U, GS, US, token } from '../plugins/state.js'
 import { getUrl } from '../plugins/convention.js'
 import GroupSelector from '../components/GroupSelector.vue'
 
-ref: groups = U.group
-ref: photos = {}
-ref: loading = { batch: false, download: false }
-ref: displayGroups = ''
-ref: blobs = []
+let groups = $ref(U.group)
+let photos = $ref({})
+let loading = $ref({ batch: false, download: false })
+let displayGroups = $ref('')
+let blobs = $ref([])
 
 async function getPhotos() {
   photos = {}

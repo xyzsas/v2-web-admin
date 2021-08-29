@@ -45,8 +45,8 @@ watch(() => GS.value[root], v => {
   if (!v) setTimeout(() => { window.close(self) }, 2000)
 })
 
-ref: expand = {}
-ref: select = ''
+let expand = $ref({})
+let select = $ref('')
 
 for (const g in GS.value) expand[g] = true
 
@@ -67,7 +67,7 @@ const items = computed(() => {
 
 const levelStyle = i => `margin-left: ${i.level * 18}px;`
 
-ref: removeLoading = {}
+let removeLoading = $ref({})
 const remove = async g => {
   const res = await Swal.fire({
     title: '危险操作',
