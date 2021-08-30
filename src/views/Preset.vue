@@ -29,12 +29,12 @@ import { getUrl } from '../plugins/convention.js'
 import Loading from '../components/Loading.vue'
 const { i:self } = defineProps(['i'])
 if (!A.value) window.close(self)
-ref: affair = A.value.id
-ref: preset = A.value.preset || ''
-ref: params = A.value.params || ''
-ref: presets = []
-ref: loading = false
-ref: M = null
+let affair = $ref(A.value.id)
+let preset = $ref(A.value.preset || '')
+let params = $ref(A.value.params || '')
+let presets = $ref([])
+let loading = $ref(false)
+let M = $ref(null)
 let template
 
 const catchErr = e => {

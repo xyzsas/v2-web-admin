@@ -50,12 +50,12 @@ import DataEdit from '../components/data/Edit.vue'
 
 const { p } = defineProps(['p'])
 
-ref: ids = null
-ref: chosen = []
-ref: show = 'loading'
-ref: data = {}
-ref: loading = false
-ref: removeLoading = {}
+let ids = $ref(null)
+let chosen = $ref([])
+let show = $ref('loading')
+let data = $ref({})
+let loading = $ref(false)
+let removeLoading = $ref({})
 
 const parseName = d => d.replace(p.id + '$_', '组件 ').replace(p.id + '$', '')
 

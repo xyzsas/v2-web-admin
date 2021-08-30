@@ -49,7 +49,7 @@ import axios from '../../plugins/axios.js'
 import { AS, CS, A, token } from '../../plugins/state.js'
 import format from '../../plugins/format.js'
 import Loading from '../../components/Loading.vue'
-ref: loading = false
+let loading = $ref(false)
 
 const pieceName = T => ({
   simple: '简单组件'

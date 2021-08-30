@@ -33,8 +33,8 @@ const views = {
 }
 const load = (w) => markRaw(views[w] ? defineAsyncComponent(views[w]) : Loading)
 
-ref: win = []
-ref: N = window.innerWidth / 320
+let win = $ref([])
+let N = $ref(window.innerWidth / 320)
 window.onresize = async () => {
   N = window.innerWidth / 320
   await nextTick()

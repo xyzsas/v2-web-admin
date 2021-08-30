@@ -32,10 +32,10 @@ function isObjEqual (o1,o2) {
   return true
 }
 
-ref: uid = ''
-ref: err = ''
-ref: input = ''
-ref: data = {}
+let uid = $ref('')
+let err = $ref('')
+let input = $ref('')
+let data = $ref({})
 watchEffect(() => {
   data = {}
   for (const id in values) {
@@ -68,7 +68,7 @@ const edit = computed(() => {
   }
 })
 
-ref: loading = false
+let loading = $ref(false)
 const catchErr = async e => {
   await Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
   if (!data) window.close()
