@@ -8,9 +8,9 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmit } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
 const props = defineProps(['modelValue'])
-const emit = defineEmit(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
 import { GS } from '../plugins/state.js'
 

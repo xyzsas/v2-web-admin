@@ -7,12 +7,12 @@
   </div>
 </template>
 <script setup>
-import { computed, defineProps, defineEmit } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
 import axios from '../../plugins/axios.js'
 import { token } from '../../plugins/state.js'
 
 const props = defineProps(['id'])
-const emits = defineEmit(['update'])
+const emits = defineEmits(['update'])
 
 let input = $ref('')
 let loading = $ref(false)
