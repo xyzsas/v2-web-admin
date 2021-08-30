@@ -7,16 +7,16 @@
   </div>
 </template>
 <script setup>
-import { computed, defineProps, defineEmit } from 'vue'
+import { computed, defineProps, defineEmits } from 'vue'
 import axios from '../../plugins/axios.js'
 import { token } from '../../plugins/state.js'
 
 const props = defineProps(['id'])
-const emits = defineEmit(['update'])
+const emits = defineEmits(['update'])
 
-ref: input = ''
-ref: loading = false
-ref: name = ''
+let input = $ref('')
+let loading = $ref(false)
+let name = $ref('')
 
 async function submit () {
   const data = {}

@@ -24,7 +24,7 @@ import AffairControl from '../components/affair/Control.vue'
 import AffairWorkspace from '../components/affair/Workspace.vue'
 
 const { p, i:self } = defineProps(['p', 'i'])
-ref: id = p.id == 'NEW' ? md5(Math.random().toString()) : p.id
+let id = $ref(p.id == 'NEW' ? md5(Math.random().toString()) : p.id)
 
 watch(() => AS.value[id], v => {
   if (!v) setTimeout(() => { window.close(self) }, 2000)

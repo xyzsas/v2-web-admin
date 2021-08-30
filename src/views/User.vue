@@ -1,4 +1,4 @@
-<template>
+let <template>
   <div style="min-width: 320px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
@@ -46,12 +46,12 @@ import { U, US, userdata, token } from '../plugins/state.js'
 import QrcodeVue from 'qrcode.vue'
 const { p, i:self } = defineProps(['p', 'i'])
 
-ref: user = {}
-ref: username = ''
-ref: loading = false
-ref: msgs = null
-ref: msgloading = false
-ref: possesionloading = false
+let user = $ref({})
+let username = $ref('')
+let loading = $ref(false)
+let msgs = $ref(null)
+let msgloading = $ref(false)
+let possesionloading = $ref(false)
 
 const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()) : p.id)
 watch(US, v => {
