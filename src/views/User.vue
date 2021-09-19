@@ -33,6 +33,7 @@ let <template>
         <div class="title is-4">{{ m.msg[0] }}</div>
         <div class="subtitle is-6 mb-1">{{ m.msg[1] }}</div>
         <a>{{ m.msg[2] }}</a>
+        <button class="buttons button mt-1 is-small is-danger" @click="removeMsg(id)" :class="{ 'is-loading': removeMsgLoading }">删除消息</button>
       </div>
     </div>
   </div>
@@ -52,6 +53,7 @@ let loading = $ref(false)
 let msgs = $ref(null)
 let msgloading = $ref(false)
 let possesionloading = $ref(false)
+let removeMsgLoading = $ref(false)
 
 const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()) : p.id)
 watch(US, v => {
@@ -119,7 +121,7 @@ async function remove () {
   loading = false
 }
 
-async function getMsg() {
+async function getMsg () {
   msgloading = true
   await axios.get('/msg/' + id.value, token())
     .then(({ data }) => {
@@ -128,6 +130,17 @@ async function getMsg() {
     })
     .catch(catchErr)
   msgloading = false
+}
+
+async function removeMsg (id) {
+  removeMsgLoading = true
+  await axios.delete(`/msg/${id}?entity=${user.id}`, token())
+    .then(() => {
+      Swal.fire('成功', '删除消息成功', 'success')
+      getMsg()
+    })
+    .catch(catchErr)
+  removeMsgLoading = false
 }
 
 async function possesion () {
