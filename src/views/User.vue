@@ -1,4 +1,4 @@
-let <template>
+<template>
   <div style="min-width: 320px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
@@ -25,10 +25,11 @@ let <template>
     </div>
     <div class="buttons" v-if="p.id != 'NEW'">
       <button class="button is-small is-warning" v-if="user && user.role != 'ADMIN'" @click="possesion" :class="{ 'is-loading': possesionloading }">以此用户身份登录</button>
-      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
+      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" @click="getMsg">载入用户消息</button>
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
+      <p v-if="Object.keys(msgs).length === 0">暂无消息</p>
       <div class="box" v-for="(m, id) in msgs">
         <div class="title is-4">{{ m.msg[0] }}</div>
         <div class="subtitle is-6 mb-1">{{ m.msg[1] }}</div>
@@ -109,8 +110,20 @@ async function submit () {
   loading = false
 }
 
+async function removeConfirmation (msg) {
+  const res = await Swal.fire({
+    title: '危险操作',
+    html: msg,
+    icon: 'warning',
+    focusCancel: true,
+    confirmButtonText: '确定',
+    showCancelButton: true,
+    cancelButtonText: '取消'
+  })
+  return res.isConfirmed
+}
 async function remove () {
-  if (!id.value) return
+  if (!id.value || !await removeConfirmation('确定要删除此用户吗？')) return
   loading = true
   await axios.delete('/user/' + id.value, token())
     .then(() => {
@@ -127,15 +140,17 @@ async function getMsg () {
     .then(({ data }) => {
       for (const k in data) data[k].msg = data[k].msg.split('$$')
       msgs = data
+      console.log(data)
     })
     .catch(catchErr)
   msgloading = false
 }
 
 async function removeMsg (id) {
+  if (!await removeConfirmation('确定要删除此消息吗？')) return
   removeMsgLoading = true
   await axios.delete(`/msg/${id}?entity=${user.id}`, token())
-    .then(() => {
+    .then((res) => {
       Swal.fire('成功', '删除消息成功', 'success')
       getMsg()
     })
