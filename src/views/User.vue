@@ -31,10 +31,13 @@
       <h2 class="title is-5 mt-6">用户消息</h2>
       <p v-if="Object.keys(msgs).length === 0">暂无消息</p>
       <div class="box" v-for="(m, id) in msgs">
-        <div class="title is-4">{{ m.msg[0] }}</div>
+        <div class="title is-4 m-0">
+          {{ m.msg[0] }}
+          <button class="button is-danger is-small is-light" color="error" @click="removeMsg(m, id)"><span class="icon"><i class="mdi mdi-18px mdi-trash-can-outline"></i></span></button>
+        </div>
+        <code>{{ m.entity }}</code>
         <div class="subtitle is-6 mb-1">{{ m.msg[1] }}</div>
         <a>{{ m.msg[2] }}</a>
-        <button class="buttons button mt-1 is-small is-danger" @click="removeMsg(id)" :class="{ 'is-loading': removeMsgLoading }">删除消息</button>
       </div>
     </div>
   </div>
@@ -146,10 +149,10 @@ async function getMsg () {
   msgloading = false
 }
 
-async function removeMsg (id) {
+async function removeMsg (m, id) {
   if (!await removeConfirmation('确定要删除此消息吗？')) return
   removeMsgLoading = true
-  await axios.delete(`/msg/${id}?entity=${user.id}`, token())
+  await axios.delete(`/msg/${id}?entity=${m.entity}`, token())
     .then((res) => {
       Swal.fire('成功', '删除消息成功', 'success')
       getMsg()
