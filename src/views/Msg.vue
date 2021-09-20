@@ -67,6 +67,7 @@ async function submit () {
     } catch (e) {
       console.log(e)
       Swal.fire('错误', e.response ? e.response.data : e.toString(), 'error')
+      loading = false
       return
     }
   }

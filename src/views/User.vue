@@ -1,4 +1,4 @@
-let <template>
+<template>
   <div style="min-width: 320px;">
     <h1 class="title is-4" style="margin-bottom: 5px;">用户 - {{ title }}</h1>
     <code class="is-inline-block mb-4">{{ id }}</code>
@@ -25,12 +25,17 @@ let <template>
     </div>
     <div class="buttons" v-if="p.id != 'NEW'">
       <button class="button is-small is-warning" v-if="user && user.role != 'ADMIN'" @click="possesion" :class="{ 'is-loading': possesionloading }">以此用户身份登录</button>
-      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" v-if="!msgs" @click="getMsg">载入用户消息</button>
+      <button class="button is-small is-info" :class="{ 'is-loading': msgloading }" @click="getMsg">载入用户消息</button>
     </div>
     <div v-if="msgs">
       <h2 class="title is-5 mt-6">用户消息</h2>
+      <p v-if="Object.keys(msgs).length === 0">暂无消息</p>
       <div class="box" v-for="(m, id) in msgs">
-        <div class="title is-4">{{ m.msg[0] }}</div>
+        <div class="title is-4 m-0">
+          {{ m.msg[0] }}
+          <button class="button is-danger is-small is-light" color="error" @click="removeMsg(m, id)"><span class="icon"><i class="mdi mdi-18px mdi-trash-can-outline"></i></span></button>
+        </div>
+        <code>{{ m.entity }}</code>
         <div class="subtitle is-6 mb-1">{{ m.msg[1] }}</div>
         <a>{{ m.msg[2] }}</a>
       </div>
@@ -52,6 +57,7 @@ let loading = $ref(false)
 let msgs = $ref(null)
 let msgloading = $ref(false)
 let possesionloading = $ref(false)
+let removeMsgLoading = $ref(false)
 
 const id = computed(() => p.id == 'NEW' ? username && md5(username.toUpperCase()) : p.id)
 watch(US, v => {
@@ -107,8 +113,20 @@ async function submit () {
   loading = false
 }
 
+async function removeConfirmation (msg) {
+  const res = await Swal.fire({
+    title: '危险操作',
+    html: msg,
+    icon: 'warning',
+    focusCancel: true,
+    confirmButtonText: '确定',
+    showCancelButton: true,
+    cancelButtonText: '取消'
+  })
+  return res.isConfirmed
+}
 async function remove () {
-  if (!id.value) return
+  if (!id.value || !await removeConfirmation('确定要删除此用户吗？')) return
   loading = true
   await axios.delete('/user/' + id.value, token())
     .then(() => {
@@ -119,15 +137,28 @@ async function remove () {
   loading = false
 }
 
-async function getMsg() {
+async function getMsg () {
   msgloading = true
   await axios.get('/msg/' + id.value, token())
     .then(({ data }) => {
       for (const k in data) data[k].msg = data[k].msg.split('$$')
       msgs = data
+      console.log(data)
     })
     .catch(catchErr)
   msgloading = false
+}
+
+async function removeMsg (m, id) {
+  if (!await removeConfirmation('确定要删除此消息吗？')) return
+  removeMsgLoading = true
+  await axios.delete(`/msg/${id}?entity=${m.entity}`, token())
+    .then((res) => {
+      Swal.fire('成功', '删除消息成功', 'success')
+      getMsg()
+    })
+    .catch(catchErr)
+  removeMsgLoading = false
 }
 
 async function possesion () {
